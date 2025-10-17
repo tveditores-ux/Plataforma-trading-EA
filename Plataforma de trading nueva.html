@@ -1,0 +1,2115 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma de Trading Completa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Arial, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .platform-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(25, 25, 45, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+        }
+        
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #8a2be2, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo-text p {
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-tab {
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            color: #a0a0c0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-tab.active {
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            color: #fff;
+            border-color: rgba(138, 43, 226, 0.5);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+        }
+        
+        .nav-tab:hover {
+            background: rgba(30, 30, 60, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .date-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .date-section label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #a0a0c0;
+        }
+        
+        .date-section input {
+            padding: 10px 12px;
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        
+        .date-section input:focus {
+            outline: none;
+            border-color: #8a2be2;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+        
+        .app-section {
+            display: none;
+        }
+        
+        .app-section.active {
+            display: block;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 25px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: rgba(25, 25, 45, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                        0 0 20px rgba(100, 80, 255, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(90deg, #8a2be2, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .card-title i {
+            font-size: 1.5rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #a0a0c0;
+            margin-bottom: 8px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #8a2be2;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+        
+        .kpis {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .kpi-card {
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .kpi-label {
+            font-size: 0.75rem;
+            color: #a0a0c0;
+            margin-bottom: 8px;
+        }
+        
+        .kpi-value {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+        
+        .pl-indicator {
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            font-weight: 600;
+            border: 1px solid;
+            transition: all 0.3s;
+        }
+        
+        .pl-positive {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4));
+            border-color: rgba(16, 185, 129, 0.6);
+            color: #10b981;
+        }
+        
+        .pl-negative {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.4));
+            border-color: rgba(239, 68, 68, 0.6);
+            color: #ef4444;
+        }
+        
+        .pl-neutral {
+            background: rgba(30, 30, 60, 0.6);
+            border-color: rgba(100, 100, 255, 0.2);
+            color: #a0a0c0;
+        }
+        
+        .status-indicator {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            margin-top: 20px;
+            border: 1px solid;
+            transition: all 0.3s;
+        }
+        
+        .status-positive {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4));
+            border-color: rgba(16, 185, 129, 0.6);
+            color: #10b981;
+        }
+        
+        .status-negative {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.4));
+            border-color: rgba(239, 68, 68, 0.6);
+            color: #ef4444;
+        }
+        
+        .status-neutral {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.4));
+            border-color: rgba(245, 158, 11, 0.6);
+            color: #f59e0b;
+        }
+        
+        .tools {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            background: rgba(20, 20, 40, 0.6);
+            color: #fff;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        button.primary {
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+            border-color: rgba(138, 43, 226, 0.5);
+        }
+        
+        button.primary:hover {
+            background: linear-gradient(135deg, #7a1bd2, #00afef);
+        }
+        
+        button.danger {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.4));
+            border-color: rgba(239, 68, 68, 0.5);
+            color: #ef4444;
+        }
+        
+        button.danger:hover {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(239, 68, 68, 0.5));
+        }
+        
+        button.success {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4));
+            border-color: rgba(16, 185, 129, 0.5);
+            color: #10b981;
+        }
+        
+        button.success:hover {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(16, 185, 129, 0.5));
+        }
+        
+        .table-container {
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(25, 25, 45, 0.7);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: rgba(30, 30, 60, 0.8);
+        }
+        
+        th {
+            padding: 15px 20px;
+            text-align: left;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #a0a0c0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        td {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+        
+        tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .mono {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .flag {
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .flag-positive {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4));
+            color: #10b981;
+        }
+        
+        .flag-negative {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.4));
+            color: #ef4444;
+        }
+        
+        .flag-neutral {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(245, 158, 11, 0.4));
+            color: #f59e0b;
+        }
+        
+        .empty-state {
+            padding: 40px 20px;
+            text-align: center;
+            color: #a0a0c0;
+        }
+        
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 12px;
+            opacity: 0.5;
+        }
+        
+        /* Estilos específicos para la calculadora */
+        .calculator-container {
+            background: rgba(25, 25, 45, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 
+                        0 0 20px rgba(100, 80, 255, 0.2),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #a0a0c0;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .result-box {
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .result-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .result-title {
+            font-size: 12px;
+            color: #a0a0c0;
+            margin-bottom: 8px;
+        }
+        
+        .result-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #fff;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+        
+        .formula {
+            font-size: 11px;
+            color: #7070a0;
+            margin-top: 5px;
+        }
+        
+        .highlight {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(0, 191, 255, 0.2));
+            border-color: rgba(138, 43, 226, 0.4);
+        }
+        
+        .info-section {
+            margin-top: 25px;
+            padding: 15px;
+            background: rgba(30, 30, 60, 0.4);
+            border-radius: 10px;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+        }
+        
+        .info-title {
+            font-size: 14px;
+            color: #a0a0c0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .info-content {
+            font-size: 12px;
+            color: #a0a0c0;
+            line-height: 1.5;
+        }
+        
+        .info-content ul {
+            padding-left: 20px;
+            margin-top: 8px;
+        }
+        
+        .info-content li {
+            margin-bottom: 5px;
+        }
+        
+        /* Estilos para la nueva calculadora de gestión de riesgo */
+        .risk-calculator {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .risk-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .risk-item {
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+        }
+        
+        .risk-value {
+            font-size: 18px;
+            font-weight: 600;
+            color: #8a2be2;
+            margin: 5px 0;
+        }
+        
+        .risk-label {
+            font-size: 11px;
+            color: #a0a0c0;
+        }
+        
+        .stop-loss-result {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4));
+            border-color: rgba(16, 185, 129, 0.6);
+            color: #10b981;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            border: 1px solid;
+        }
+        
+        .stop-loss-title {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .stop-loss-value {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        /* Resto de estilos se mantienen igual... */
+        
+        /* Estilos para el Plan de 21 Días */
+        .days-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        
+        .day-card {
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 6px;
+            padding: 12px;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            transition: transform 0.2s;
+        }
+        
+        .day-card:hover {
+            transform: translateY(-2px);
+            background: rgba(40, 40, 80, 0.6);
+        }
+        
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .day-title {
+            font-weight: 500;
+            color: #e8e6d9;
+            font-size: 0.9rem;
+        }
+        
+        .day-number {
+            background-color: #8a2be2;
+            color: #f1f0e5;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .day-value {
+            font-weight: 500;
+            color: #f1f0e5;
+            font-size: 1rem;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+        
+        .day-percentage {
+            font-size: 0.8rem;
+            color: #c8c6b5;
+            text-align: center;
+            display: block;
+        }
+        
+        .day-gain {
+            font-size: 0.8rem;
+            color: #f59e0b;
+            text-align: center;
+            display: block;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        
+        .summary {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .summary-item {
+            background: rgba(30, 30, 60, 0.6);
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+        }
+        
+        .summary-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #8a2be2;
+            margin: 5px 0;
+        }
+        
+        .summary-label {
+            font-size: 0.8rem;
+            color: #c8c6b5;
+        }
+        
+        /* Estilos discretos para recordatorios y música */
+        .discrete-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(25, 25, 45, 0.5);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .reminder-controls {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .reminder-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            background: rgba(30, 30, 60, 0.6);
+            color: #a0a0c0;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .reminder-btn:hover {
+            background: rgba(40, 40, 80, 0.6);
+            transform: translateY(-1px);
+        }
+        
+        .reminder-btn.active {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4));
+            color: #10b981;
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        
+        .music-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .music-input {
+            width: 200px;
+            padding: 8px 12px;
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 0.75rem;
+        }
+        
+        .music-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            background: rgba(30, 30, 60, 0.6);
+            color: #a0a0c0;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .music-btn:hover {
+            background: rgba(40, 40, 80, 0.6);
+            transform: translateY(-1px);
+        }
+        
+        .music-btn.active {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(0, 191, 255, 0.4));
+            color: #8a2be2;
+            border-color: rgba(138, 43, 226, 0.3);
+        }
+        
+        /* Notificación discreta */
+        .discrete-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(25, 25, 45, 0.9);
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            border-radius: 8px;
+            padding: 12px 16px;
+            max-width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .discrete-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .notification-icon {
+            font-size: 16px;
+            color: #8a2be2;
+        }
+        
+        .notification-text {
+            font-size: 0.875rem;
+            color: #a0a0c0;
+        }
+        
+        .notification-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: #a0a0c0;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 4px;
+        }
+        
+        /* Reproductor de música discreto */
+        .music-player {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(25, 25, 45, 0.9);
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            width: 300px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .music-player.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .player-title {
+            font-size: 0.75rem;
+            color: #a0a0c0;
+            margin-bottom: 5px;
+        }
+        
+        .player-btn {
+            padding: 6px 10px;
+            border-radius: 4px;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            background: rgba(30, 30, 60, 0.6);
+            color: #a0a0c0;
+            font-size: 0.7rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .player-btn:hover {
+            background: rgba(40, 40, 80, 0.6);
+        }
+        
+        /* Scrollbar personalizado */
+        .days-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .days-container::-webkit-scrollbar-track {
+            background: rgba(20, 20, 40, 0.6);
+            border-radius: 4px;
+        }
+        
+        .days-container::-webkit-scrollbar-thumb {
+            background: #8a2be2;
+            border-radius: 4px;
+        }
+        
+        .days-container::-webkit-scrollbar-thumb:hover {
+            background: #7a1bd2;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .nav-tabs {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .kpis {
+                grid-template-columns: 1fr 1fr;
+            }
+            
+            .tools {
+                flex-direction: column;
+            }
+            
+            button {
+                justify-content: center;
+            }
+            
+            th, td {
+                padding: 10px 12px;
+            }
+            
+            .results {
+                grid-template-columns: 1fr;
+            }
+            
+            .summary {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .discrete-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .reminder-controls {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .music-control {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .music-input {
+                width: 150px;
+            }
+            
+            .music-player {
+                width: calc(100% - 40px);
+                left: 20px;
+                right: 20px;
+            }
+            
+            .risk-summary {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="platform-container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>PLATAFORMA DE TRADING COMPLETA</h1>
+                    <p>Bitácora, Calculadora y Plan de 21 Días</p>
+                </div>
+            </div>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-tab="trading">Trading</button>
+                <button class="nav-tab" data-tab="plan21">Plan 21 Días</button>
+            </div>
+            <div class="date-section">
+                <label for="fecha">Fecha:</label>
+                <input id="fecha" type="date">
+            </div>
+        </header>
+
+        <!-- Controles discretos para recordatorios y música -->
+        <div class="discrete-controls">
+            <div class="reminder-controls">
+                <button class="reminder-btn" id="waterReminder">
+                    <i class="fas fa-tint"></i>
+                    Agua
+                </button>
+                <button class="reminder-btn" id="stretchReminder">
+                    <i class="fas fa-walking"></i>
+                    Estirar
+                </button>
+            </div>
+            
+            <div class="music-control">
+                <input type="text" class="music-input" id="youtubeUrl" placeholder="Enlace de YouTube">
+                <button class="music-btn" id="toggleMusic">
+                    <i class="fas fa-music"></i>
+                    Música
+                </button>
+            </div>
+        </div>
+
+        <!-- Sección de Trading -->
+        <div id="trading" class="app-section active">
+            <div class="main-content">
+                <div class="bitacora-section">
+                    <div class="card">
+                        <div class="card-title">
+                            <i class="fas fa-book"></i>
+                            Bitácora de Trading
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="saldo">Saldo inicial ($)</label>
+                                <input id="saldo" type="number" step="0.01" inputmode="decimal" placeholder="Ej: 1000.00">
+                            </div>
+                            <div class="form-group">
+                                <label for="metaG">Meta de ganancia (%)</label>
+                                <input id="metaG" type="number" step="0.1" inputmode="decimal" placeholder="2.0">
+                            </div>
+                            <div class="form-group">
+                                <label for="metaP">Meta de pérdida (%)</label>
+                                <input id="metaP" type="number" step="0.1" inputmode="decimal" placeholder="1.0">
+                            </div>
+                        </div>
+
+                        <div class="kpis">
+                            <div class="kpi-card">
+                                <div class="kpi-label">Meta Ganancia</div>
+                                <div id="metaGusd" class="kpi-value mono">—</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-label">Meta Pérdida</div>
+                                <div id="metaPusd" class="kpi-value mono">—</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-label">P&L Acumulado</div>
+                                <div id="acum" class="kpi-value mono">0.00</div>
+                            </div>
+                            <div class="pl-indicator pl-neutral" id="plBox">
+                                <div class="kpi-label">% P&L</div>
+                                <div id="plPct" class="kpi-value mono">0.00%</div>
+                            </div>
+                        </div>
+
+                        <div id="estado" class="status-indicator status-neutral">
+                            EN PROCESO — CONTINUAR OPERANDO
+                        </div>
+
+                        <div class="tools">
+                            <button class="primary" id="addRow">
+                                <i class="fas fa-plus"></i>
+                                Agregar operación
+                            </button>
+                            <button id="limpiar" class="danger">
+                                <i class="fas fa-trash"></i>
+                                Limpiar día
+                            </button>
+                            <button id="export" class="success">
+                                <i class="fas fa-file-export"></i>
+                                Exportar a Excel
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="tabla">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Activo/Instrumento</th>
+                                    <th>Resultado ($)</th>
+                                    <th>Acumulado ($)</th>
+                                    <th>¿Parar?</th>
+                                    <th>Notas y Observaciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="body">
+                                <!-- Las filas se generarán dinámicamente -->
+                            </tbody>
+                        </table>
+                        <div id="emptyState" class="empty-state" style="display: none;">
+                            <i class="fas fa-clipboard-list" style="font-size: 48px; margin-bottom: 12px; opacity: 0.5;"></i>
+                            <p>No hay operaciones registradas hoy.</p>
+                            <p>Haz clic en "Agregar operación" para comenzar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calculator-section">
+                    <div class="calculator-container">
+                        <div class="card-title">
+                            <i class="fas fa-calculator"></i>
+                            Calculadora de Lotaje
+                        </div>
+                        
+                        <div class="input-group">
+                            <div class="input-label">
+                                <span>Puntos</span>
+                                <span>Distancia a TP</span>
+                            </div>
+                            <div class="input-container">
+                                <input type="number" id="puntos" value="7" min="0" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <div class="input-group">
+                            <div class="input-label">
+                                <span>Stop Loss (SL)</span>
+                                <span>Distancia a SL</span>
+                            </div>
+                            <div class="input-container">
+                                <input type="number" id="sl" value="6" min="0" step="0.1">
+                            </div>
+                        </div>
+                        
+                        <div class="results">
+                            <div class="result-box">
+                                <div class="result-title">PROFIT</div>
+                                <div class="result-value" id="profit">21.00</div>
+                                <div class="formula">SL × 3</div>
+                            </div>
+                            
+                            <div class="result-box highlight">
+                                <div class="result-title">LOTAJE</div>
+                                <div class="result-value" id="lotaje">0.86</div>
+                                <div class="formula">SL / Puntos</div>
+                            </div>
+                            
+                            <div class="result-box">
+                                <div class="result-title">2 ENTRADAS</div>
+                                <div class="result-value" id="dosEntradas">0.43</div>
+                                <div class="formula">Lotaje / 2</div>
+                            </div>
+                            
+                            <div class="result-box">
+                                <div class="result-title">RIESGO</div>
+                                <div class="result-value" id="riesgo">1.00</div>
+                                <div class="formula">SL × Lotaje</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Nueva Calculadora de Gestión de Riesgo -->
+                        <div class="risk-calculator">
+                            <div class="card-title">
+                                <i class="fas fa-shield-alt"></i>
+                                Gestión de Riesgo Diario
+                            </div>
+                            
+                            <div class="input-group">
+                                <div class="input-label">
+                                    <span>Capital Inicial ($)</span>
+                                    <span>Base para el cálculo</span>
+                                </div>
+                                <div class="input-container">
+                                    <input type="number" id="capitalInicial" value="1000" min="1" step="1">
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <div class="input-label">
+                                    <span>% Riesgo Diario</span>
+                                    <span>Porcentaje del capital a arriesgar</span>
+                                </div>
+                                <div class="input-container">
+                                    <input type="number" id="riesgoDiario" value="2" min="0.1" step="0.1">
+                                </div>
+                            </div>
+                            
+                            <div class="input-group">
+                                <div class="input-label">
+                                    <span>Número de Operaciones</span>
+                                    <span>En cuántas operaciones dividir el riesgo</span>
+                                </div>
+                                <div class="input-container">
+                                    <input type="number" id="numOperaciones" value="3" min="1" step="1">
+                                </div>
+                            </div>
+                            
+                            <div class="risk-summary">
+                                <div class="risk-item">
+                                    <div class="risk-label">RIESGO DIARIO</div>
+                                    <div class="risk-value" id="riesgoDiarioUSD">$20.00</div>
+                                </div>
+                                
+                                <div class="risk-item">
+                                    <div class="risk-label">RIESGO POR OPERACIÓN</div>
+                                    <div class="risk-value" id="riesgoPorOperacion">$6.67</div>
+                                </div>
+                            </div>
+                            
+                            <div class="stop-loss-result">
+                                <div class="stop-loss-title">STOP LOSS POR OPERACIÓN</div>
+                                <div class="stop-loss-value" id="stopLossOperacion">$6.67</div>
+                            </div>
+                        </div>
+                        
+                        <div class="info-section">
+                            <div class="info-title">
+                                <i class="fas fa-info-circle"></i>
+                                Información sobre la Gestión de Riesgo
+                            </div>
+                            <div class="info-content">
+                                <p>Esta calculadora te ayuda a determinar el stop loss adecuado para cada operación:</p>
+                                <ul>
+                                    <li><strong>Capital Inicial:</strong> Tu capital total disponible para trading</li>
+                                    <li><strong>% Riesgo Diario:</strong> Porcentaje máximo del capital que puedes arriesgar en un día</li>
+                                    <li><strong>Número de Operaciones:</strong> Cantidad de operaciones en las que dividirás tu riesgo diario</li>
+                                    <li><strong>Stop Loss por Operación:</strong> Monto máximo que puedes perder en cada operación</li>
+                                </ul>
+                                <p><strong>Ejemplo:</strong> Con $1000 de capital, 2% de riesgo diario y 3 operaciones:<br>
+                                - Riesgo diario: $20<br>
+                                - Riesgo por operación: $6.67<br>
+                                - Stop Loss por operación: $6.67</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección Plan de 21 Días -->
+        <div id="plan21" class="app-section">
+            <!-- Contenido del plan de 21 días igual que antes -->
+            <div class="main-content">
+                <div class="bitacora-section">
+                    <div class="card">
+                        <div class="card-title">
+                            <i class="fas fa-calendar-alt"></i>
+                            Plan de 21 Días - Interés Compuesto
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="initialCapital">Capital Inicial ($)</label>
+                                <input type="number" id="initialCapital" value="150" min="1" step="1">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="dailyPercentage">Porcentaje Diario (%)</label>
+                                <input type="number" id="dailyPercentage" value="20" min="0.1" step="0.1">
+                            </div>
+                            
+                            <div class="form-group">
+                                <button id="calculateBtn" class="primary" style="margin-top: 24px;">
+                                    <i class="fas fa-calculator"></i>
+                                    Calcular Progresión
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="kpis">
+                            <div class="kpi-card">
+                                <div class="kpi-label">Día 1</div>
+                                <div id="day1Value" class="kpi-value mono">$0.00</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-label">Día 7</div>
+                                <div id="day7Value" class="kpi-value mono">$0.00</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-label">Día 14</div>
+                                <div id="day14Value" class="kpi-value mono">$0.00</div>
+                            </div>
+                            <div class="kpi-card">
+                                <div class="kpi-label">Día 21</div>
+                                <div id="day21Value" class="kpi-value mono">$0.00</div>
+                            </div>
+                        </div>
+
+                        <div class="summary">
+                            <div class="summary-item">
+                                <div class="summary-label">INICIAL</div>
+                                <div class="summary-value" id="initialCapitalDisplay">$150.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">FINAL</div>
+                                <div class="summary-value" id="finalCapital">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">GANANCIA</div>
+                                <div class="summary-value" id="totalGain">$0.00</div>
+                            </div>
+                            <div class="summary-item">
+                                <div class="summary-label">INCREMENTO</div>
+                                <div class="summary-value" id="totalIncrease">0%</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="card-title" style="margin: 20px;">
+                            <i class="fas fa-chart-line"></i>
+                            Progresión Diaria - Meta de Ganancia
+                        </div>
+                        <div class="days-container" id="daysContainer">
+                            <!-- Los días se generarán dinámicamente -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="calculator-section">
+                    <div class="calculator-container">
+                        <div class="card-title">
+                            <i class="fas fa-lightbulb"></i>
+                            Información del Plan
+                        </div>
+                        
+                        <div class="info-section">
+                            <div class="info-title">
+                                <i class="fas fa-target"></i>
+                                Objetivo del Plan
+                            </div>
+                            <div class="info-content">
+                                <p>El <strong>Plan de 21 Días</strong> te ayuda a visualizar el crecimiento de tu capital aplicando interés compuesto diario.</p>
+                                <p><strong>¿Cómo funciona?</strong></p>
+                                <ul>
+                                    <li>Establece tu capital inicial</li>
+                                    <li>Define el porcentaje de crecimiento diario</li>
+                                    <li>Visualiza tu progreso día a día</li>
+                                    <li>Alcanza tus metas financieras de manera consistente</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="info-section">
+                            <div class="info-title">
+                                <i class="fas fa-chart-bar"></i>
+                                Ejemplo de Crecimiento
+                            </div>
+                            <div class="info-content">
+                                <p>Con un capital inicial de <strong>$150</strong> y un crecimiento diario del <strong>20%</strong>:</p>
+                                <ul>
+                                    <li>Día 1: $180.00</li>
+                                    <li>Día 7: $537.48</li>
+                                    <li>Día 14: $1,927.34</li>
+                                    <li>Día 21: $6,914.52</li>
+                                </ul>
+                                <p><strong>¡El interés compuesto es tu mejor aliado!</strong></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notificación discreta -->
+    <div class="discrete-notification" id="notification">
+        <div class="notification-content">
+            <div class="notification-icon">
+                <i class="fas fa-bell"></i>
+            </div>
+            <div class="notification-text" id="notificationText"></div>
+            <button class="notification-close" id="notificationClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Reproductor de música discreto -->
+    <div class="music-player" id="musicPlayer">
+        <div class="player-title">Reproduciendo música de fondo</div>
+        <div class="player-controls">
+            <button class="player-btn" id="stopMusic">
+                <i class="fas fa-stop"></i>
+                Detener
+            </button>
+            <div style="flex: 1;"></div>
+            <button class="player-btn" id="hidePlayer">
+                <i class="fas fa-eye-slash"></i>
+                Ocultar
+            </button>
+        </div>
+        <div id="musicContainer"></div>
+    </div>
+
+    <script>
+        // Navegación entre secciones
+        document.addEventListener('DOMContentLoaded', function() {
+            const navTabs = document.querySelectorAll('.nav-tab');
+            const appSections = document.querySelectorAll('.app-section');
+            
+            navTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Actualizar pestañas activas
+                    navTabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Mostrar sección activa
+                    appSections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === targetTab) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Inicializar ambas secciones
+            initializeTradingSection();
+            initializeTradingCalculator();
+            initializeRiskCalculator();
+            initializePlan21Section();
+            initializeDiscreteReminders();
+            initializeDiscreteMusic();
+        });
+
+        // Sistema de Recordatorios Discretos
+        function initializeDiscreteReminders() {
+            const waterBtn = document.getElementById('waterReminder');
+            const stretchBtn = document.getElementById('stretchReminder');
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            const notificationClose = document.getElementById('notificationClose');
+            
+            let waterInterval, stretchInterval;
+            let waterActive = false;
+            let stretchActive = false;
+            
+            // Recordatorio de agua (45 minutos)
+            waterBtn.addEventListener('click', function() {
+                if (waterActive) {
+                    clearInterval(waterInterval);
+                    waterActive = false;
+                    waterBtn.classList.remove('active');
+                    showNotification('Recordatorio de agua desactivado');
+                } else {
+                    waterActive = true;
+                    waterBtn.classList.add('active');
+                    
+                    // Configurar intervalo de 45 minutos (2700000 ms)
+                    waterInterval = setInterval(function() {
+                        showNotification('💧 Es hora de beber agua');
+                    }, 2700000); // 45 minutos
+                    
+                    showNotification('Recordatorio de agua activado (cada 45 min)');
+                }
+            });
+            
+            // Recordatorio de estiramiento (30 minutos)
+            stretchBtn.addEventListener('click', function() {
+                if (stretchActive) {
+                    clearInterval(stretchInterval);
+                    stretchActive = false;
+                    stretchBtn.classList.remove('active');
+                    showNotification('Recordatorio de estiramiento desactivado');
+                } else {
+                    stretchActive = true;
+                    stretchBtn.classList.add('active');
+                    
+                    // Configurar intervalo de 30 minutos (1800000 ms)
+                    stretchInterval = setInterval(function() {
+                        showNotification('🚶‍♂️ Levántate y estira las piernas');
+                    }, 1800000); // 30 minutos
+                    
+                    showNotification('Recordatorio de estiramiento activado (cada 30 min)');
+                }
+            });
+            
+            // Mostrar notificación discreta
+            function showNotification(message) {
+                notificationText.textContent = message;
+                notification.classList.add('show');
+                
+                // Ocultar automáticamente después de 5 segundos
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 5000);
+                
+                // Reproducir sonido de notificación suave
+                playSoftNotification();
+            }
+            
+            // Cerrar notificación manualmente
+            notificationClose.addEventListener('click', function() {
+                notification.classList.remove('show');
+            });
+            
+            // Sonido de notificación suave
+            function playSoftNotification() {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 600;
+                gainNode.gain.value = 0.05; // Volumen muy bajo
+                
+                oscillator.start();
+                
+                // Parar después de 200ms (sonido corto)
+                setTimeout(function() {
+                    oscillator.stop();
+                }, 200);
+            }
+        }
+        
+        // Reproductor de Música Discreto
+        function initializeDiscreteMusic() {
+            const toggleMusicBtn = document.getElementById('toggleMusic');
+            const youtubeUrlInput = document.getElementById('youtubeUrl');
+            const musicPlayer = document.getElementById('musicPlayer');
+            const stopMusicBtn = document.getElementById('stopMusic');
+            const hidePlayerBtn = document.getElementById('hidePlayer');
+            const musicContainer = document.getElementById('musicContainer');
+            
+            let musicActive = false;
+            
+            toggleMusicBtn.addEventListener('click', function() {
+                if (musicActive) {
+                    // Detener música
+                    musicContainer.innerHTML = '';
+                    musicActive = false;
+                    toggleMusicBtn.classList.remove('active');
+                    musicPlayer.classList.remove('show');
+                    showNotification('Música detenida');
+                } else {
+                    const url = youtubeUrlInput.value.trim();
+                    
+                    if (!url) {
+                        showNotification('Ingresa un enlace de YouTube');
+                        return;
+                    }
+                    
+                    // Extraer el ID del video de YouTube
+                    const videoId = extractYouTubeId(url);
+                    
+                    if (!videoId) {
+                        showNotification('Enlace de YouTube no válido');
+                        return;
+                    }
+                    
+                    // Crear iframe para reproducir el video (solo audio)
+                    musicContainer.innerHTML = `
+                        <iframe 
+                            width="100%" 
+                            height="80" 
+                            src="https://www.youtube.com/embed/${videoId}?autoplay=1&controls=0&modestbranding=1&rel=0&showinfo=0" 
+                            frameborder="0" 
+                            allow="autoplay; encrypted-media" 
+                            style="border-radius: 4px;">
+                        </iframe>
+                    `;
+                    
+                    musicActive = true;
+                    toggleMusicBtn.classList.add('active');
+                    musicPlayer.classList.add('show');
+                    showNotification('Reproduciendo música de fondo');
+                }
+            });
+            
+            // Detener música
+            stopMusicBtn.addEventListener('click', function() {
+                musicContainer.innerHTML = '';
+                musicActive = false;
+                toggleMusicBtn.classList.remove('active');
+                musicPlayer.classList.remove('show');
+                showNotification('Música detenida');
+            });
+            
+            // Ocultar reproductor
+            hidePlayerBtn.addEventListener('click', function() {
+                musicPlayer.classList.remove('show');
+            });
+            
+            // Función para extraer ID de video de YouTube
+            function extractYouTubeId(url) {
+                const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+                const match = url.match(regExp);
+                return (match && match[7].length === 11) ? match[7] : false;
+            }
+            
+            // Precargar algunos enlaces de música de fondo sugeridos
+            const suggestedMusic = [
+                'https://www.youtube.com/watch?v=5qap5aO4i9A',
+                'https://www.youtube.com/watch?v=0Kx4qE9WYfA',
+                'https://www.youtube.com/watch?v=W2TE0DjdN6I'
+            ];
+            
+            // Mostrar sugerencias en el placeholder
+            let suggestionIndex = 0;
+            setInterval(() => {
+                youtubeUrlInput.placeholder = suggestedMusic[suggestionIndex];
+                suggestionIndex = (suggestionIndex + 1) % suggestedMusic.length;
+            }, 4000);
+            
+            // Mostrar notificación (función reutilizada)
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                const notificationText = document.getElementById('notificationText');
+                
+                notificationText.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Código para la Bitácora de Trading
+        function initializeTradingSection() {
+            const LS_KEY = 'bitacora_trading_profesional_v3';
+
+            // Elementos DOM
+            const fecha = document.getElementById('fecha');
+            const saldo = document.getElementById('saldo');
+            const metaG = document.getElementById('metaG');
+            const metaP = document.getElementById('metaP');
+            const metaGusd = document.getElementById('metaGusd');
+            const metaPusd = document.getElementById('metaPusd');
+            const acum = document.getElementById('acum');
+            const plPct = document.getElementById('plPct');
+            const plBox = document.getElementById('plBox');
+            const estado = document.getElementById('estado');
+            const tbody = document.getElementById('body');
+            const emptyState = document.getElementById('emptyState');
+            const addRowBtn = document.getElementById('addRow');
+            const limpiarBtn = document.getElementById('limpiar');
+            const exportBtn = document.getElementById('export');
+
+            // Utilidades
+            function formatNumber(n) {
+                if (isNaN(n)) return '—';
+                return Number(n).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+
+            function formatPercent(n) {
+                if (isNaN(n)) return '—';
+                return Number(n).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%';
+            }
+
+            // Crear fila de operación
+            function createRow(index, data = {}) {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="mono">${index}</td>
+                    <td><input data-field="activo" placeholder="Ej: EUR/USD, AAPL, Índice S&P" value="${data.activo || ''}"></td>
+                    <td><input data-field="resultado" type="number" step="0.01" inputmode="decimal" placeholder="0.00" value="${data.resultado || ''}"></td>
+                    <td class="mono" data-field="acumulado">0.00</td>
+                    <td><span class="flag flag-neutral" data-field="flag">CONTINUAR</span></td>
+                    <td><input data-field="notas" placeholder="Estrategia, emociones, lección aprendida" value="${data.notas || ''}"></td>
+                `;
+                
+                // Event listeners para inputs
+                tr.querySelectorAll('input').forEach(input => {
+                    input.addEventListener('input', () => {
+                        saveData();
+                        recalculate();
+                    });
+                });
+                
+                return tr;
+            }
+
+            // Inicializar filas
+            function initializeRows(count = 5) {
+                tbody.innerHTML = '';
+                for (let i = 1; i <= count; i++) {
+                    tbody.appendChild(createRow(i));
+                }
+                toggleEmptyState();
+            }
+
+            // Mostrar/ocultar estado vacío
+            function toggleEmptyState() {
+                const rows = tbody.querySelectorAll('tr');
+                const hasData = Array.from(rows).some(row => {
+                    const activo = row.querySelector('[data-field="activo"]').value;
+                    const resultado = row.querySelector('[data-field="resultado"]').value;
+                    return activo || resultado;
+                });
+                
+                emptyState.style.display = hasData ? 'none' : 'block';
+            }
+
+            // Recalcular métricas
+            function recalculate() {
+                const initialBalance = parseFloat(saldo.value) || 0;
+                const gainTarget = initialBalance * (parseFloat(metaG.value) || 0) / 100;
+                const lossTarget = -initialBalance * (parseFloat(metaP.value) || 0) / 100;
+
+                // Actualizar metas en USD
+                metaGusd.textContent = formatNumber(gainTarget);
+                metaPusd.textContent = formatNumber(lossTarget);
+
+                let runningTotal = 0;
+                let shouldStop = false;
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+                
+                rows.forEach(row => {
+                    const resultadoInput = row.querySelector('[data-field="resultado"]');
+                    const resultado = parseFloat(resultadoInput.value) || 0;
+                    runningTotal += resultado;
+                    
+                    // Actualizar acumulado
+                    const acumuladoCell = row.querySelector('[data-field="acumulado"]');
+                    acumuladoCell.textContent = formatNumber(runningTotal);
+                    
+                    // Determinar si debe parar
+                    const flagCell = row.querySelector('[data-field="flag"]');
+                    flagCell.className = 'flag flag-neutral';
+                    flagCell.textContent = 'CONTINUAR';
+                    
+                    if (!shouldStop) {
+                        if (gainTarget > 0 && runningTotal >= gainTarget) {
+                            flagCell.className = 'flag flag-positive';
+                            flagCell.textContent = 'META GANADA';
+                            shouldStop = true;
+                        } else if (lossTarget < 0 && runningTotal <= lossTarget) {
+                            flagCell.className = 'flag flag-negative';
+                            flagCell.textContent = 'META PERDIDA';
+                            shouldStop = true;
+                        }
+                    } else {
+                        flagCell.className = 'flag flag-neutral';
+                        flagCell.textContent = 'PARAR';
+                    }
+                });
+
+                // Actualizar KPIs
+                acum.textContent = formatNumber(runningTotal);
+                
+                const percentChange = initialBalance > 0 ? (runningTotal / initialBalance) * 100 : 0;
+                plPct.textContent = formatPercent(percentChange);
+                
+                // Actualizar indicador P&L
+                plBox.className = 'pl-indicator';
+                if (percentChange > 0) {
+                    plBox.classList.add('pl-positive');
+                } else if (percentChange < 0) {
+                    plBox.classList.add('pl-negative');
+                } else {
+                    plBox.classList.add('pl-neutral');
+                }
+                
+                // Actualizar estado global
+                estado.className = 'status-indicator';
+                if (gainTarget > 0 && runningTotal >= gainTarget) {
+                    estado.classList.add('status-positive');
+                    estado.textContent = 'META GANADA — PARAR TRADING';
+                } else if (lossTarget < 0 && runningTotal <= lossTarget) {
+                    estado.classList.add('status-negative');
+                    estado.textContent = 'META PERDIDA — PARAR TRADING';
+                } else {
+                    estado.classList.add('status-neutral');
+                    estado.textContent = 'EN PROCESO — CONTINUAR OPERANDO';
+                }
+                
+                toggleEmptyState();
+            }
+
+            // Guardar datos en localStorage
+            function saveData() {
+                const data = {
+                    fecha: fecha.value,
+                    saldo: saldo.value,
+                    metaG: metaG.value,
+                    metaP: metaP.value,
+                    operaciones: Array.from(tbody.querySelectorAll('tr')).map(row => ({
+                        activo: row.querySelector('[data-field="activo"]').value,
+                        resultado: row.querySelector('[data-field="resultado"]').value,
+                        notas: row.querySelector('[data-field="notas"]').value
+                    }))
+                };
+                localStorage.setItem(LS_KEY, JSON.stringify(data));
+            }
+
+            // Cargar datos desde localStorage
+            function loadData() {
+                const saved = localStorage.getItem(LS_KEY);
+                if (!saved) {
+                    setToday();
+                    initializeRows(5);
+                    return;
+                }
+                
+                try {
+                    const data = JSON.parse(saved);
+                    fecha.value = data.fecha || getToday();
+                    saldo.value = data.saldo || '';
+                    metaG.value = data.metaG || '';
+                    metaP.value = data.metaP || '';
+                    
+                    tbody.innerHTML = '';
+                    if (data.operaciones && data.operaciones.length > 0) {
+                        data.operaciones.forEach((op, index) => {
+                            tbody.appendChild(createRow(index + 1, op));
+                        });
+                    } else {
+                        initializeRows(5);
+                    }
+                } catch (error) {
+                    console.error('Error cargando datos:', error);
+                    setToday();
+                    initializeRows(5);
+                }
+            }
+
+            // Fecha de hoy
+            function getToday() {
+                const today = new Date();
+                return today.toISOString().split('T')[0];
+            }
+
+            function setToday() {
+                fecha.value = getToday();
+            }
+
+            // Exportar a Excel
+            function exportToExcel() {
+                const initialBalance = parseFloat(saldo.value) || 0;
+                const gainTarget = initialBalance * (parseFloat(metaG.value) || 0) / 100;
+                const lossTarget = -initialBalance * (parseFloat(metaP.value) || 0) / 100;
+                
+                let runningTotal = 0;
+                const operationsData = [['#', 'Activo/Instrumento', 'Resultado ($)', 'Acumulado ($)', 'Estado', 'Notas y Observaciones']];
+                
+                Array.from(tbody.querySelectorAll('tr')).forEach((row, index) => {
+                    const activo = row.querySelector('[data-field="activo"]').value;
+                    const resultado = parseFloat(row.querySelector('[data-field="resultado"]').value) || 0;
+                    runningTotal += resultado;
+                    
+                    let estadoOp = 'CONTINUAR';
+                    if (gainTarget > 0 && runningTotal >= gainTarget) {
+                        estadoOp = 'META GANADA';
+                    } else if (lossTarget < 0 && runningTotal <= lossTarget) {
+                        estadoOp = 'META PERDIDA';
+                    }
+                    
+                    const notas = row.querySelector('[data-field="notas"]').value;
+                    operationsData.push([index + 1, activo, resultado, runningTotal, estadoOp, notas]);
+                });
+                
+                // Crear hoja de resumen
+                const percentChange = initialBalance > 0 ? (runningTotal / initialBalance) * 100 : 0;
+                const summaryData = [
+                    ['Resumen del día de trading'],
+                    [],
+                    ['Fecha', fecha.value || getToday()],
+                    ['Saldo inicial', initialBalance],
+                    ['Meta de ganancia (%)', parseFloat(metaG.value) || 0],
+                    ['Meta de pérdida (%)', parseFloat(metaP.value) || 0],
+                    ['Meta de ganancia ($)', gainTarget],
+                    ['Meta de pérdida ($)', lossTarget],
+                    ['P&L acumulado ($)', runningTotal],
+                    ['P&L acumulado (%)', percentChange],
+                    ['Estado', runningTotal >= gainTarget ? 'META GANADA' : runningTotal <= lossTarget ? 'META PERDIDA' : 'EN PROCESO']
+                ];
+                
+                // Crear libro de trabajo
+                const wb = XLSX.utils.book_new();
+                const wsSummary = XLSX.utils.aoa_to_sheet(summaryData);
+                const wsOperations = XLSX.utils.aoa_to_sheet(operationsData);
+                
+                XLSX.utils.book_append_sheet(wb, wsSummary, 'Resumen');
+                XLSX.utils.book_append_sheet(wb, wsOperations, 'Operaciones');
+                
+                // Descargar archivo
+                const fileName = `Bitacora_Trading_${fecha.value || getToday()}.xlsx`;
+                XLSX.writeFile(wb, fileName);
+            }
+
+            // Event listeners
+            addRowBtn.addEventListener('click', () => {
+                const rowCount = tbody.querySelectorAll('tr').length;
+                tbody.appendChild(createRow(rowCount + 1));
+                saveData();
+                recalculate();
+            });
+
+            limpiarBtn.addEventListener('click', () => {
+                if (confirm('¿Estás seguro de que quieres limpiar todos los datos del día?')) {
+                    localStorage.removeItem(LS_KEY);
+                    saldo.value = '';
+                    metaG.value = '';
+                    metaP.value = '';
+                    setToday();
+                    initializeRows(5);
+                    recalculate();
+                }
+            });
+
+            exportBtn.addEventListener('click', exportToExcel);
+
+            // Recalcular cuando cambien los inputs de configuración
+            [fecha, saldo, metaG, metaP].forEach(input => {
+                input.addEventListener('input', () => {
+                    saveData();
+                    recalculate();
+                });
+            });
+
+            // Inicializar
+            loadData();
+            recalculate();
+        }
+
+        // Código para la Calculadora de Lotaje
+        function initializeTradingCalculator() {
+            const puntosInput = document.getElementById('puntos');
+            const slInput = document.getElementById('sl');
+            const profitElement = document.getElementById('profit');
+            const lotajeElement = document.getElementById('lotaje');
+            const dosEntradasElement = document.getElementById('dosEntradas');
+            const riesgoElement = document.getElementById('riesgo');
+
+            function calcular() {
+                const puntos = parseFloat(puntosInput.value) || 0;
+                const sl = parseFloat(slInput.value) || 0;
+                
+                // Profit = SL × 3
+                const profit = sl * 3;
+                profitElement.textContent = profit.toFixed(2);
+                
+                // Lotaje = SL / Puntos
+                let lotaje = 0;
+                if (puntos > 0) {
+                    lotaje = sl / puntos;
+                }
+                lotajeElement.textContent = lotaje.toFixed(2);
+                
+                // 2 Entradas = Lotaje / 2
+                const dosEntradas = lotaje / 2;
+                dosEntradasElement.textContent = dosEntradas.toFixed(2);
+                
+                // Riesgo = SL × Lotaje
+                const riesgo = sl * lotaje;
+                riesgoElement.textContent = riesgo.toFixed(2);
+            }
+
+            puntosInput.addEventListener('input', calcular);
+            slInput.addEventListener('input', calcular);
+
+            calcular();
+        }
+
+        // Nueva Calculadora de Gestión de Riesgo
+        function initializeRiskCalculator() {
+            const capitalInicialInput = document.getElementById('capitalInicial');
+            const riesgoDiarioInput = document.getElementById('riesgoDiario');
+            const numOperacionesInput = document.getElementById('numOperaciones');
+            const riesgoDiarioUSD = document.getElementById('riesgoDiarioUSD');
+            const riesgoPorOperacion = document.getElementById('riesgoPorOperacion');
+            const stopLossOperacion = document.getElementById('stopLossOperacion');
+
+            function calcularRiesgo() {
+                const capitalInicial = parseFloat(capitalInicialInput.value) || 0;
+                const riesgoDiario = parseFloat(riesgoDiarioInput.value) || 0;
+                const numOperaciones = parseInt(numOperacionesInput.value) || 1;
+                
+                // Calcular riesgo diario en USD
+                const riesgoDiarioUSDValue = capitalInicial * (riesgoDiario / 100);
+                riesgoDiarioUSD.textContent = `$${riesgoDiarioUSDValue.toFixed(2)}`;
+                
+                // Calcular riesgo por operación
+                const riesgoPorOperacionValue = riesgoDiarioUSDValue / numOperaciones;
+                riesgoPorOperacion.textContent = `$${riesgoPorOperacionValue.toFixed(2)}`;
+                
+                // El stop loss por operación es igual al riesgo por operación
+                stopLossOperacion.textContent = `$${riesgoPorOperacionValue.toFixed(2)}`;
+            }
+
+            // Event listeners para inputs
+            capitalInicialInput.addEventListener('input', calcularRiesgo);
+            riesgoDiarioInput.addEventListener('input', calcularRiesgo);
+            numOperacionesInput.addEventListener('input', calcularRiesgo);
+
+            // Calcular inicialmente
+            calcularRiesgo();
+        }
+
+        // Código para el Plan de 21 Días
+        function initializePlan21Section() {
+            const daysContainer = document.getElementById('daysContainer');
+            const calculateBtn = document.getElementById('calculateBtn');
+            const initialCapitalInput = document.getElementById('initialCapital');
+            const dailyPercentageInput = document.getElementById('dailyPercentage');
+            const initialCapitalDisplay = document.getElementById('initialCapitalDisplay');
+            const finalCapitalEl = document.getElementById('finalCapital');
+            const totalGainEl = document.getElementById('totalGain');
+            const totalIncreaseEl = document.getElementById('totalIncrease');
+            const day1Value = document.getElementById('day1Value');
+            const day7Value = document.getElementById('day7Value');
+            const day14Value = document.getElementById('day14Value');
+            const day21Value = document.getElementById('day21Value');
+            
+            let daysData = [];
+            
+            // Actualizar display del capital inicial
+            initialCapitalInput.addEventListener('input', function() {
+                initialCapitalDisplay.textContent = `$${parseFloat(this.value).toFixed(2)}`;
+            });
+            
+            // Función para calcular el crecimiento
+            function calculateGrowth() {
+                daysData = [];
+                const initialCapital = parseFloat(initialCapitalInput.value);
+                const dailyPercentage = parseFloat(dailyPercentageInput.value);
+                let currentValue = initialCapital;
+                let previousValue = initialCapital;
+                
+                for (let day = 1; day <= 21; day++) {
+                    previousValue = currentValue;
+                    currentValue = currentValue * (1 + dailyPercentage / 100);
+                    const dailyGain = currentValue - previousValue;
+                    
+                    const dayData = {
+                        day: day,
+                        value: currentValue.toFixed(2),
+                        gain: dailyGain.toFixed(2),
+                        percentage: dailyPercentage
+                    };
+                    
+                    daysData.push(dayData);
+                    
+                    // Actualizar días destacados
+                    if (day === 1) day1Value.textContent = `$${currentValue.toFixed(2)}`;
+                    if (day === 7) day7Value.textContent = `$${currentValue.toFixed(2)}`;
+                    if (day === 14) day14Value.textContent = `$${currentValue.toFixed(2)}`;
+                    if (day === 21) day21Value.textContent = `$${currentValue.toFixed(2)}`;
+                }
+                
+                // Actualizar resumen
+                const finalCapital = currentValue;
+                const totalGain = finalCapital - initialCapital;
+                const totalIncrease = ((finalCapital / initialCapital - 1) * 100).toFixed(2);
+                
+                finalCapitalEl.textContent = `$${finalCapital.toFixed(2)}`;
+                totalGainEl.textContent = `$${totalGain.toFixed(2)}`;
+                totalIncreaseEl.textContent = `${totalIncrease}%`;
+                
+                renderDays();
+            }
+            
+            // Función para renderizar los días
+            function renderDays() {
+                daysContainer.innerHTML = '';
+                
+                daysData.forEach(dayData => {
+                    const dayCard = document.createElement('div');
+                    dayCard.className = 'day-card';
+                    
+                    const dayHeader = document.createElement('div');
+                    dayHeader.className = 'day-header';
+                    
+                    const dayTitle = document.createElement('div');
+                    dayTitle.className = 'day-title';
+                    dayTitle.textContent = `DÍA ${dayData.day}`;
+                    
+                    const dayNumber = document.createElement('div');
+                    dayNumber.className = 'day-number';
+                    dayNumber.textContent = dayData.day;
+                    
+                    dayHeader.appendChild(dayTitle);
+                    dayHeader.appendChild(dayNumber);
+                    
+                    const dayValue = document.createElement('div');
+                    dayValue.className = 'day-value';
+                    dayValue.textContent = `$${dayData.value}`;
+                    
+                    const dayPercentage = document.createElement('div');
+                    dayPercentage.className = 'day-percentage';
+                    dayPercentage.textContent = `+${dayData.percentage}%`;
+                    
+                    const dayGain = document.createElement('div');
+                    dayGain.className = 'day-gain';
+                    dayGain.textContent = `Meta: +$${dayData.gain}`;
+                    
+                    dayCard.appendChild(dayHeader);
+                    dayCard.appendChild(dayValue);
+                    dayCard.appendChild(dayPercentage);
+                    dayCard.appendChild(dayGain);
+                    
+                    daysContainer.appendChild(dayCard);
+                });
+            }
+            
+            // Event listeners
+            calculateBtn.addEventListener('click', calculateGrowth);
+            
+            // Calcular automáticamente al cargar la página
+            calculateGrowth();
+        }
+    </script>
+</body>
+</html>
