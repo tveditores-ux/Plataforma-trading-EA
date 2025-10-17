@@ -8,71 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Todos los estilos anteriores se mantienen igual */
-        
-        /* Nuevos estilos para medicamentos */
-        .medication-reminder {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-left: 15px;
-        }
-        
-        .medication-btn {
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid rgba(100, 100, 255, 0.2);
-            background: rgba(30, 30, 60, 0.6);
-            color: #a0a0c0;
-            font-size: 0.75rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-        }
-        
-        .medication-btn:hover {
-            background: rgba(40, 40, 80, 0.6);
-            transform: translateY(-1px);
-        }
-        
-        .medication-btn.active {
-            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.4));
-            color: #ff6b6b;
-            border-color: rgba(255, 107, 107, 0.3);
-        }
-        
-        .medication-schedule {
-            margin-top: 10px;
-            padding: 10px;
-            background: rgba(20, 20, 40, 0.4);
-            border-radius: 8px;
-            font-size: 0.75rem;
-            color: #a0a0c0;
-        }
-        
-        .medication-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-        }
-        
-        .medication-item:last-child {
-            margin-bottom: 0;
-        }
-        
-        .medication-time {
-            font-weight: 600;
-            color: #ff6b6b;
-        }
-        
-        .medication-name {
-            font-weight: 500;
-        }
-        
-        /* Resto de estilos se mantienen igual */
-        
         * {
             margin: 0;
             padding: 0;
@@ -81,12 +16,28 @@
         }
         
         body {
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            /* El fondo se establecerá dinámicamente con JavaScript */
             color: #fff;
             min-height: 100vh;
             padding: 20px;
+            transition: background 1s ease;
         }
         
+        .day-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(25, 25, 45, 0.8);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        /* El resto de estilos permanecen exactamente igual */
         .platform-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -1039,16 +990,13 @@
             .risk-summary {
                 grid-template-columns: 1fr;
             }
-            
-            .medication-reminder {
-                margin-left: 0;
-                margin-top: 10px;
-                justify-content: center;
-            }
         }
     </style>
 </head>
 <body>
+    <!-- Indicador del día actual -->
+    <div class="day-indicator" id="dayIndicator"></div>
+
     <div class="platform-container">
         <header>
             <div class="logo">
@@ -1081,26 +1029,6 @@
                     <i class="fas fa-walking"></i>
                     Estirar
                 </button>
-                <div class="medication-reminder">
-                    <button class="medication-btn" id="medicationReminder">
-                        <i class="fas fa-pills"></i>
-                        Medicamentos
-                    </button>
-                    <div class="medication-schedule">
-                        <div class="medication-item">
-                            <span class="medication-time">9:00 AM</span>
-                            <span class="medication-name">Lozartan</span>
-                        </div>
-                        <div class="medication-item">
-                            <span class="medication-time">4:00 PM</span>
-                            <span class="medication-name">Amlodipina</span>
-                        </div>
-                        <div class="medication-item">
-                            <span class="medication-time">9:00 PM</span>
-                            <span class="medication-name">Lozartan</span>
-                        </div>
-                    </div>
-                </div>
             </div>
             
             <div class="music-control">
@@ -1491,6 +1419,9 @@
     <script>
         // Navegación entre secciones
         document.addEventListener('DOMContentLoaded', function() {
+            // Aplicar color según el día de la semana
+            applyDayColor();
+            
             const navTabs = document.querySelectorAll('.nav-tab');
             const appSections = document.querySelectorAll('.app-section');
             
@@ -1519,144 +1450,35 @@
             initializePlan21Section();
             initializeDiscreteReminders();
             initializeDiscreteMusic();
-            initializeMedicationReminders();
         });
 
-        // Sistema de Recordatorios de Medicamentos
-        function initializeMedicationReminders() {
-            const medicationBtn = document.getElementById('medicationReminder');
-            const notification = document.getElementById('notification');
-            const notificationText = document.getElementById('notificationText');
-            const notificationClose = document.getElementById('notificationClose');
-            
-            let medicationActive = false;
-            let medicationInterval;
-            
-            // Horarios de medicamentos
-            const medicationSchedule = [
-                { time: '09:00', medication: 'Lozartan', lastShown: null },
-                { time: '16:00', medication: 'Amlodipina', lastShown: null },
-                { time: '21:00', medication: 'Lozartan', lastShown: null }
+        // Función para aplicar color según el día de la semana
+        function applyDayColor() {
+            const daysOfWeek = [
+                { name: 'Domingo', color: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)' },
+                { name: 'Lunes', color: 'linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)' },
+                { name: 'Martes', color: 'linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b)' },
+                { name: 'Miércoles', color: 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)' },
+                { name: 'Jueves', color: 'linear-gradient(135deg, #1e3c72, #2a5298, #1e3c72)' },
+                { name: 'Viernes', color: 'linear-gradient(135deg, #4b6cb7, #182848)' },
+                { name: 'Sábado', color: 'linear-gradient(135deg, #200122, #6f0000)' }
             ];
             
-            // Cargar últimos recordatorios mostrados desde localStorage
-            function loadLastShown() {
-                const saved = localStorage.getItem('medicationRemindersLastShown');
-                if (saved) {
-                    const lastShownData = JSON.parse(saved);
-                    medicationSchedule.forEach(item => {
-                        if (lastShownData[item.time]) {
-                            item.lastShown = lastShownData[item.time];
-                        }
-                    });
-                }
-            }
+            const today = new Date().getDay();
+            const body = document.body;
+            const dayIndicator = document.getElementById('dayIndicator');
             
-            // Guardar últimos recordatorios mostrados en localStorage
-            function saveLastShown() {
-                const lastShownData = {};
-                medicationSchedule.forEach(item => {
-                    lastShownData[item.time] = item.lastShown;
-                });
-                localStorage.setItem('medicationRemindersLastShown', JSON.stringify(lastShownData));
-            }
+            // Aplicar el gradiente del día actual
+            body.style.background = daysOfWeek[today].color;
             
-            // Verificar si es hora de algún medicamento
-            function checkMedicationTime() {
-                if (!medicationActive) return;
-                
-                const now = new Date();
-                const currentTime = now.toTimeString().substring(0, 5); // Formato HH:MM
-                const today = now.toDateString();
-                
-                medicationSchedule.forEach(item => {
-                    if (currentTime === item.time) {
-                        // Verificar si ya se mostró hoy
-                        if (item.lastShown !== today) {
-                            showMedicationNotification(item.medication);
-                            item.lastShown = today;
-                            saveLastShown();
-                        }
-                    }
-                });
-            }
-            
-            // Mostrar notificación de medicamento
-            function showMedicationNotification(medication) {
-                notificationText.textContent = `💊 Hora de tomar ${medication}`;
-                notification.classList.add('show');
-                
-                // Reproducir sonido de notificación
-                playMedicationNotification();
-                
-                // Ocultar automáticamente después de 10 segundos
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 10000);
-            }
-            
-            // Sonido de notificación para medicamentos
-            function playMedicationNotification() {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                
-                oscillator.type = 'sine';
-                oscillator.frequency.value = 800;
-                gainNode.gain.value = 0.1;
-                
-                oscillator.start();
-                
-                // Parar después de 500ms (sonido más largo para medicamentos)
-                setTimeout(function() {
-                    oscillator.stop();
-                }, 500);
-            }
-            
-            // Event listener para el botón de medicamentos
-            medicationBtn.addEventListener('click', function() {
-                if (medicationActive) {
-                    clearInterval(medicationInterval);
-                    medicationActive = false;
-                    medicationBtn.classList.remove('active');
-                    showNotification('Recordatorio de medicamentos desactivado');
-                } else {
-                    medicationActive = true;
-                    medicationBtn.classList.add('active');
-                    
-                    // Cargar últimos recordatorios
-                    loadLastShown();
-                    
-                    // Configurar intervalo para verificar cada minuto (60000 ms)
-                    medicationInterval = setInterval(checkMedicationTime, 60000);
-                    
-                    // Verificar inmediatamente al activar
-                    checkMedicationTime();
-                    
-                    showNotification('Recordatorio de medicamentos activado');
-                }
-            });
-            
-            // Cerrar notificación manualmente
-            notificationClose.addEventListener('click', function() {
-                notification.classList.remove('show');
-            });
-            
-            // Función reutilizada para mostrar notificaciones generales
-            function showNotification(message) {
-                notificationText.textContent = message;
-                notification.classList.add('show');
-                
-                setTimeout(() => {
-                    notification.classList.remove('show');
-                }, 3000);
-            }
+            // Actualizar el indicador del día
+            dayIndicator.textContent = `Hoy: ${daysOfWeek[today].name}`;
         }
 
-        // Sistema de Recordatorios Discretos (existente)
+        // El resto del código JavaScript existente permanece exactamente igual
+        // [Todo el código JavaScript anterior permanece sin cambios]
+
+        // Sistema de Recordatorios Discretos
         function initializeDiscreteReminders() {
             const waterBtn = document.getElementById('waterReminder');
             const stretchBtn = document.getElementById('stretchReminder');
@@ -1749,7 +1571,7 @@
             }
         }
         
-        // Reproductor de Música Discreto (existente)
+        // Reproductor de Música Discreto
         function initializeDiscreteMusic() {
             const toggleMusicBtn = document.getElementById('toggleMusic');
             const youtubeUrlInput = document.getElementById('youtubeUrl');
@@ -1852,7 +1674,7 @@
             }
         }
 
-        // Código para la Bitácora de Trading (existente)
+        // Código para la Bitácora de Trading
         function initializeTradingSection() {
             const LS_KEY = 'bitacora_trading_profesional_v3';
 
@@ -2150,7 +1972,7 @@
             recalculate();
         }
 
-        // Código para la Calculadora de Lotaje (existente)
+        // Código para la Calculadora de Lotaje
         function initializeTradingCalculator() {
             const puntosInput = document.getElementById('puntos');
             const slInput = document.getElementById('sl');
@@ -2189,7 +2011,7 @@
             calcular();
         }
 
-        // Nueva Calculadora de Gestión de Riesgo (existente)
+        // Nueva Calculadora de Gestión de Riesgo
         function initializeRiskCalculator() {
             const capitalInicialInput = document.getElementById('capitalInicial');
             const riesgoDiarioInput = document.getElementById('riesgoDiario');
@@ -2224,7 +2046,7 @@
             calcularRiesgo();
         }
 
-        // Código para el Plan de 21 Días (existente)
+        // Código para el Plan de 21 Días
         function initializePlan21Section() {
             const daysContainer = document.getElementById('daysContainer');
             const calculateBtn = document.getElementById('calculateBtn');
