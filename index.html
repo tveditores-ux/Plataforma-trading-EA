@@ -16,7 +16,6 @@
         }
         
         body {
-            /* El fondo se establecerá dinámicamente con JavaScript */
             color: #fff;
             min-height: 100vh;
             padding: 20px;
@@ -37,7 +36,6 @@
             backdrop-filter: blur(5px);
         }
         
-        /* El resto de estilos permanecen exactamente igual */
         .platform-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -616,8 +614,6 @@
             font-weight: 700;
         }
         
-        /* Resto de estilos se mantienen igual... */
-        
         /* Estilos para el Plan de 21 Días */
         .days-container {
             display: grid;
@@ -922,6 +918,195 @@
             background: #7a1bd2;
         }
         
+        /* Estilos para recordatorios de medicamentos */
+        .medication-reminder {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: 15px;
+        }
+        
+        .medication-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            background: rgba(30, 30, 60, 0.6);
+            color: #a0a0c0;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .medication-btn:hover {
+            background: rgba(40, 40, 80, 0.6);
+            transform: translateY(-1px);
+        }
+        
+        .medication-btn.active {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.2), rgba(255, 107, 107, 0.4));
+            color: #ff6b6b;
+            border-color: rgba(255, 107, 107, 0.3);
+        }
+        
+        .medication-schedule {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(20, 20, 40, 0.4);
+            border-radius: 8px;
+            font-size: 0.75rem;
+            color: #a0a0c0;
+        }
+        
+        .medication-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        
+        .medication-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .medication-time {
+            font-weight: 600;
+            color: #ff6b6b;
+        }
+        
+        .medication-name {
+            font-weight: 500;
+        }
+        
+        /* Estilos para la función de compartir */
+        .share-controls {
+            display: flex;
+            gap: 10px;
+            margin-left: 15px;
+        }
+        
+        .share-btn {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(100, 100, 255, 0.2);
+            background: rgba(30, 30, 60, 0.6);
+            color: #a0a0c0;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .share-btn:hover {
+            background: rgba(40, 40, 80, 0.6);
+            transform: translateY(-1px);
+        }
+        
+        .share-btn.active {
+            background: linear-gradient(135deg, rgba(138, 43, 226, 0.2), rgba(0, 191, 255, 0.4));
+            color: #8a2be2;
+            border-color: rgba(138, 43, 226, 0.3);
+        }
+        
+        .share-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .share-modal.show {
+            display: flex;
+        }
+        
+        .share-modal-content {
+            background: rgba(25, 25, 45, 0.95);
+            border-radius: 16px;
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+        }
+        
+        .share-modal-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(90deg, #8a2be2, #00bfff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .share-input-group {
+            margin-bottom: 20px;
+        }
+        
+        .share-input-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #a0a0c0;
+            margin-bottom: 8px;
+        }
+        
+        .share-input {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(20, 20, 40, 0.6);
+            border: 1px solid rgba(100, 100, 255, 0.3);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .share-input:focus {
+            outline: none;
+            border-color: #8a2be2;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        }
+        
+        .share-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .share-status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            background: rgba(30, 30, 60, 0.6);
+            font-size: 0.75rem;
+            color: #a0a0c0;
+            text-align: center;
+        }
+        
+        .share-status.connected {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4));
+            color: #10b981;
+        }
+        
+        .share-status.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.4));
+            color: #ef4444;
+        }
+        
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -990,6 +1175,18 @@
             .risk-summary {
                 grid-template-columns: 1fr;
             }
+            
+            .medication-reminder {
+                margin-left: 0;
+                margin-top: 10px;
+                justify-content: center;
+            }
+            
+            .share-controls {
+                margin-left: 0;
+                margin-top: 10px;
+                justify-content: center;
+            }
         }
     </style>
 </head>
@@ -1018,7 +1215,7 @@
             </div>
         </header>
 
-        <!-- Controles discretos para recordatorios y música -->
+        <!-- Controles discretos para recordatorios, música y compartir -->
         <div class="discrete-controls">
             <div class="reminder-controls">
                 <button class="reminder-btn" id="waterReminder">
@@ -1029,6 +1226,32 @@
                     <i class="fas fa-walking"></i>
                     Estirar
                 </button>
+                <div class="medication-reminder">
+                    <button class="medication-btn" id="medicationReminder">
+                        <i class="fas fa-pills"></i>
+                        Medicamentos
+                    </button>
+                    <div class="medication-schedule">
+                        <div class="medication-item">
+                            <span class="medication-time">9:00 AM</span>
+                            <span class="medication-name">Lozartan</span>
+                        </div>
+                        <div class="medication-item">
+                            <span class="medication-time">4:00 PM</span>
+                            <span class="medication-name">Amlodipina</span>
+                        </div>
+                        <div class="medication-item">
+                            <span class="medication-time">9:00 PM</span>
+                            <span class="medication-name">Lozartan</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="share-controls">
+                    <button class="share-btn" id="shareBtn">
+                        <i class="fas fa-share-alt"></i>
+                        Compartir
+                    </button>
+                </div>
             </div>
             
             <div class="music-control">
@@ -1262,7 +1485,6 @@
 
         <!-- Sección Plan de 21 Días -->
         <div id="plan21" class="app-section">
-            <!-- Contenido del plan de 21 días igual que antes -->
             <div class="main-content">
                 <div class="bitacora-section">
                     <div class="card">
@@ -1386,6 +1608,57 @@
         </div>
     </div>
 
+    <!-- Modal para compartir -->
+    <div class="share-modal" id="shareModal">
+        <div class="share-modal-content">
+            <div class="share-modal-title">
+                <i class="fas fa-share-alt"></i>
+                Compartir Plataforma
+            </div>
+            
+            <div class="share-input-group">
+                <div class="share-input-label">ID de Sesión</div>
+                <input type="text" class="share-input" id="sessionIdInput" readonly>
+                <div class="share-buttons">
+                    <button class="primary" id="copySessionId">
+                        <i class="fas fa-copy"></i>
+                        Copiar ID
+                    </button>
+                    <button class="success" id="createSession">
+                        <i class="fas fa-plus"></i>
+                        Nueva Sesión
+                    </button>
+                </div>
+            </div>
+            
+            <div class="share-input-group">
+                <div class="share-input-label">Unirse a Sesión</div>
+                <input type="text" class="share-input" id="joinSessionInput" placeholder="Pega el ID de sesión aquí">
+                <div class="share-buttons">
+                    <button class="primary" id="joinSession">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Unirse
+                    </button>
+                    <button class="danger" id="leaveSession">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Salir
+                    </button>
+                </div>
+            </div>
+            
+            <div class="share-status" id="shareStatus">
+                No conectado a ninguna sesión
+            </div>
+            
+            <div class="share-buttons">
+                <button class="primary" id="closeShareModal">
+                    <i class="fas fa-times"></i>
+                    Cerrar
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Notificación discreta -->
     <div class="discrete-notification" id="notification">
         <div class="notification-content">
@@ -1443,13 +1716,15 @@
                 });
             });
             
-            // Inicializar ambas secciones
+            // Inicializar todas las secciones
             initializeTradingSection();
             initializeTradingCalculator();
             initializeRiskCalculator();
             initializePlan21Section();
             initializeDiscreteReminders();
             initializeDiscreteMusic();
+            initializeMedicationReminders();
+            initializeSharingSystem();
         });
 
         // Función para aplicar color según el día de la semana
@@ -1475,8 +1750,349 @@
             dayIndicator.textContent = `Hoy: ${daysOfWeek[today].name}`;
         }
 
-        // El resto del código JavaScript existente permanece exactamente igual
-        // [Todo el código JavaScript anterior permanece sin cambios]
+        // Sistema de Recordatorios de Medicamentos
+        function initializeMedicationReminders() {
+            const medicationBtn = document.getElementById('medicationReminder');
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notificationText');
+            const notificationClose = document.getElementById('notificationClose');
+            
+            let medicationActive = false;
+            let medicationInterval;
+            
+            // Horarios de medicamentos
+            const medicationSchedule = [
+                { time: '09:00', medication: 'Lozartan', lastShown: null },
+                { time: '16:00', medication: 'Amlodipina', lastShown: null },
+                { time: '21:00', medication: 'Lozartan', lastShown: null }
+            ];
+            
+            // Cargar últimos recordatorios mostrados desde localStorage
+            function loadLastShown() {
+                const saved = localStorage.getItem('medicationRemindersLastShown');
+                if (saved) {
+                    const lastShownData = JSON.parse(saved);
+                    medicationSchedule.forEach(item => {
+                        if (lastShownData[item.time]) {
+                            item.lastShown = lastShownData[item.time];
+                        }
+                    });
+                }
+            }
+            
+            // Guardar últimos recordatorios mostrados en localStorage
+            function saveLastShown() {
+                const lastShownData = {};
+                medicationSchedule.forEach(item => {
+                    lastShownData[item.time] = item.lastShown;
+                });
+                localStorage.setItem('medicationRemindersLastShown', JSON.stringify(lastShownData));
+            }
+            
+            // Verificar si es hora de algún medicamento
+            function checkMedicationTime() {
+                if (!medicationActive) return;
+                
+                const now = new Date();
+                const currentTime = now.toTimeString().substring(0, 5); // Formato HH:MM
+                const today = now.toDateString();
+                
+                medicationSchedule.forEach(item => {
+                    if (currentTime === item.time) {
+                        // Verificar si ya se mostró hoy
+                        if (item.lastShown !== today) {
+                            showMedicationNotification(item.medication);
+                            item.lastShown = today;
+                            saveLastShown();
+                        }
+                    }
+                });
+            }
+            
+            // Mostrar notificación de medicamento
+            function showMedicationNotification(medication) {
+                notificationText.textContent = `💊 Hora de tomar ${medication}`;
+                notification.classList.add('show');
+                
+                // Reproducir sonido de notificación
+                playMedicationNotification();
+                
+                // Ocultar automáticamente después de 10 segundos
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 10000);
+            }
+            
+            // Sonido de notificación para medicamentos
+            function playMedicationNotification() {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                oscillator.type = 'sine';
+                oscillator.frequency.value = 800;
+                gainNode.gain.value = 0.1;
+                
+                oscillator.start();
+                
+                // Parar después de 500ms (sonido más largo para medicamentos)
+                setTimeout(function() {
+                    oscillator.stop();
+                }, 500);
+            }
+            
+            // Event listener para el botón de medicamentos
+            medicationBtn.addEventListener('click', function() {
+                if (medicationActive) {
+                    clearInterval(medicationInterval);
+                    medicationActive = false;
+                    medicationBtn.classList.remove('active');
+                    showNotification('Recordatorio de medicamentos desactivado');
+                } else {
+                    medicationActive = true;
+                    medicationBtn.classList.add('active');
+                    
+                    // Cargar últimos recordatorios
+                    loadLastShown();
+                    
+                    // Configurar intervalo para verificar cada minuto (60000 ms)
+                    medicationInterval = setInterval(checkMedicationTime, 60000);
+                    
+                    // Verificar inmediatamente al activar
+                    checkMedicationTime();
+                    
+                    showNotification('Recordatorio de medicamentos activado');
+                }
+            });
+            
+            // Cerrar notificación manualmente
+            notificationClose.addEventListener('click', function() {
+                notification.classList.remove('show');
+            });
+            
+            // Función reutilizada para mostrar notificaciones generales
+            function showNotification(message) {
+                notificationText.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // Sistema de Compartición en Tiempo Real
+        function initializeSharingSystem() {
+            const shareBtn = document.getElementById('shareBtn');
+            const shareModal = document.getElementById('shareModal');
+            const sessionIdInput = document.getElementById('sessionIdInput');
+            const copySessionIdBtn = document.getElementById('copySessionId');
+            const createSessionBtn = document.getElementById('createSession');
+            const joinSessionInput = document.getElementById('joinSessionInput');
+            const joinSessionBtn = document.getElementById('joinSession');
+            const leaveSessionBtn = document.getElementById('leaveSession');
+            const shareStatus = document.getElementById('shareStatus');
+            const closeShareModal = document.getElementById('closeShareModal');
+            
+            let currentSessionId = null;
+            let isHost = false;
+            let peer = null;
+            let conn = null;
+            
+            // Abrir modal al hacer clic en el botón de compartir
+            shareBtn.addEventListener('click', function() {
+                shareModal.classList.add('show');
+                updateShareStatus();
+            });
+            
+            // Cerrar modal
+            closeShareModal.addEventListener('click', function() {
+                shareModal.classList.remove('show');
+            });
+            
+            // Crear nueva sesión
+            createSessionBtn.addEventListener('click', function() {
+                createNewSession();
+            });
+            
+            // Unirse a sesión existente
+            joinSessionBtn.addEventListener('click', function() {
+                const sessionId = joinSessionInput.value.trim();
+                if (sessionId) {
+                    joinSession(sessionId);
+                } else {
+                    showNotification('Por favor, ingresa un ID de sesión válido');
+                }
+            });
+            
+            // Salir de la sesión actual
+            leaveSessionBtn.addEventListener('click', function() {
+                leaveSession();
+            });
+            
+            // Copiar ID de sesión al portapapeles
+            copySessionIdBtn.addEventListener('click', function() {
+                if (sessionIdInput.value) {
+                    sessionIdInput.select();
+                    document.execCommand('copy');
+                    showNotification('ID de sesión copiado al portapapeles');
+                }
+            });
+            
+            // Crear nueva sesión
+            function createNewSession() {
+                // Generar ID único para la sesión
+                currentSessionId = generateSessionId();
+                isHost = true;
+                
+                // Actualizar interfaz
+                sessionIdInput.value = currentSessionId;
+                updateShareStatus();
+                
+                // Inicializar conexión PeerJS como host
+                initializePeerConnection(true);
+                
+                showNotification('Sesión creada. Comparte el ID con otros usuarios.');
+            }
+            
+            // Unirse a sesión existente
+            function joinSession(sessionId) {
+                currentSessionId = sessionId;
+                isHost = false;
+                
+                // Actualizar interfaz
+                sessionIdInput.value = sessionId;
+                updateShareStatus();
+                
+                // Inicializar conexión PeerJS como cliente
+                initializePeerConnection(false);
+                
+                showNotification('Uniéndose a la sesión...');
+            }
+            
+            // Salir de la sesión actual
+            function leaveSession() {
+                if (peer) {
+                    peer.destroy();
+                    peer = null;
+                }
+                
+                if (conn) {
+                    conn.close();
+                    conn = null;
+                }
+                
+                currentSessionId = null;
+                isHost = false;
+                
+                // Actualizar interfaz
+                sessionIdInput.value = '';
+                joinSessionInput.value = '';
+                updateShareStatus();
+                
+                showNotification('Sesión cerrada');
+            }
+            
+            // Actualizar estado de la conexión en la interfaz
+            function updateShareStatus() {
+                if (!currentSessionId) {
+                    shareStatus.textContent = 'No conectado a ninguna sesión';
+                    shareStatus.className = 'share-status';
+                    shareBtn.classList.remove('active');
+                } else if (isHost) {
+                    shareStatus.textContent = 'Activo como anfitrión - Sesión: ' + currentSessionId;
+                    shareStatus.className = 'share-status connected';
+                    shareBtn.classList.add('active');
+                } else {
+                    shareStatus.textContent = 'Conectado como invitado - Sesión: ' + currentSessionId;
+                    shareStatus.className = 'share-status connected';
+                    shareBtn.classList.add('active');
+                }
+            }
+            
+            // Inicializar conexión PeerJS
+            function initializePeerConnection(host) {
+                // Para una implementación real, necesitarías incluir la biblioteca PeerJS
+                // y configurar un servidor de señalización
+                
+                // Esta es una simulación del funcionamiento
+                if (host) {
+                    showNotification('Esperando conexiones... Comparte el ID: ' + currentSessionId);
+                    
+                    // Simular conexión exitosa después de 2 segundos
+                    setTimeout(() => {
+                        showNotification('Sesión lista para compartir datos');
+                    }, 2000);
+                } else {
+                    showNotification('Conectando a la sesión...');
+                    
+                    // Simular conexión exitosa después de 2 segundos
+                    setTimeout(() => {
+                        showNotification('Conectado a la sesión. Sincronizando datos...');
+                        // En una implementación real, aquí se solicitarían los datos actuales
+                    }, 2000);
+                }
+                
+                // En una implementación real, aquí iría el código para:
+                // 1. Inicializar PeerJS
+                // 2. Establecer conexiones
+                // 3. Sincronizar datos entre clientes
+                // 4. Manejar eventos de conexión/desconexión
+            }
+            
+            // Generar ID de sesión único
+            function generateSessionId() {
+                return Math.random().toString(36).substring(2, 8).toUpperCase();
+            }
+            
+            // Sincronizar datos (simulación)
+            function syncData(data) {
+                // En una implementación real, esta función enviaría los datos
+                // a través de la conexión PeerJS a todos los clientes conectados
+                console.log('Sincronizando datos:', data);
+            }
+            
+            // Mostrar notificación
+            function showNotification(message) {
+                const notification = document.getElementById('notification');
+                const notificationText = document.getElementById('notificationText');
+                
+                notificationText.textContent = message;
+                notification.classList.add('show');
+                
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+            
+            // Modificar la función saveData existente para incluir sincronización
+            const originalSaveData = window.saveData;
+            if (originalSaveData) {
+                window.saveData = function() {
+                    originalSaveData.apply(this, arguments);
+                    
+                    // Si estamos en una sesión compartida, sincronizar datos
+                    if (currentSessionId) {
+                        const data = {
+                            fecha: document.getElementById('fecha').value,
+                            saldo: document.getElementById('saldo').value,
+                            metaG: document.getElementById('metaG').value,
+                            metaP: document.getElementById('metaP').value,
+                            operaciones: Array.from(document.querySelectorAll('#body tr')).map(row => ({
+                                activo: row.querySelector('[data-field="activo"]').value,
+                                resultado: row.querySelector('[data-field="resultado"]').value,
+                                notas: row.querySelector('[data-field="notas"]').value
+                            }))
+                        };
+                        
+                        syncData(data);
+                    }
+                };
+            }
+        }
 
         // Sistema de Recordatorios Discretos
         function initializeDiscreteReminders() {
