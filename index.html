@@ -20,6 +20,7 @@
             min-height: 100vh;
             padding: 20px;
             transition: background 1s ease;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
         }
         
         .day-indicator {
@@ -899,25 +900,6 @@
             background: rgba(40, 40, 80, 0.6);
         }
         
-        /* Scrollbar personalizado */
-        .days-container::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        .days-container::-webkit-scrollbar-track {
-            background: rgba(20, 20, 40, 0.6);
-            border-radius: 4px;
-        }
-        
-        .days-container::-webkit-scrollbar-thumb {
-            background: #8a2be2;
-            border-radius: 4px;
-        }
-        
-        .days-container::-webkit-scrollbar-thumb:hover {
-            background: #7a1bd2;
-        }
-        
         /* Estilos para recordatorios de medicamentos */
         .medication-reminder {
             display: flex;
@@ -1052,33 +1034,69 @@
             -webkit-text-fill-color: transparent;
         }
         
-        .share-input-group {
+        .share-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
             margin-bottom: 20px;
         }
         
-        .share-input-label {
-            display: block;
-            font-size: 0.875rem;
-            font-weight: 500;
-            color: #a0a0c0;
-            margin-bottom: 8px;
-        }
-        
-        .share-input {
-            width: 100%;
-            padding: 12px 15px;
-            background: rgba(20, 20, 40, 0.6);
-            border: 1px solid rgba(100, 100, 255, 0.3);
-            border-radius: 8px;
-            color: #fff;
-            font-size: 16px;
+        .share-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: rgba(30, 30, 60, 0.6);
+            border-radius: 10px;
+            cursor: pointer;
             transition: all 0.3s ease;
+            border: 1px solid rgba(100, 100, 255, 0.2);
         }
         
-        .share-input:focus {
-            outline: none;
-            border-color: #8a2be2;
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+        .share-option:hover {
+            background: rgba(40, 40, 80, 0.6);
+            transform: translateY(-2px);
+        }
+        
+        .share-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .share-option.whatsapp .share-icon {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+        }
+        
+        .share-option.telegram .share-icon {
+            background: linear-gradient(135deg, #0088cc, #005c8a);
+        }
+        
+        .share-option.email .share-icon {
+            background: linear-gradient(135deg, #EA4335, #D14836);
+        }
+        
+        .share-option.copy .share-icon {
+            background: linear-gradient(135deg, #8a2be2, #00bfff);
+        }
+        
+        .share-option-text {
+            flex: 1;
+        }
+        
+        .share-option-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+        
+        .share-option-description {
+            font-size: 0.75rem;
+            color: #a0a0c0;
         }
         
         .share-buttons {
@@ -1087,24 +1105,35 @@
             margin-top: 20px;
         }
         
-        .share-status {
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 8px;
-            background: rgba(30, 30, 60, 0.6);
-            font-size: 0.75rem;
-            color: #a0a0c0;
-            text-align: center;
+        /* Colaboración - estilos discretos */
+        .collaboration-indicator {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: rgba(25, 25, 45, 0.8);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.7rem;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
-        .share-status.connected {
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.4));
-            color: #10b981;
-        }
-        
-        .share-status.error {
-            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(239, 68, 68, 0.4));
-            color: #ef4444;
+        .collaboration-count {
+            background: #8a2be2;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: bold;
         }
         
         @media (max-width: 768px) {
@@ -1193,6 +1222,12 @@
 <body>
     <!-- Indicador del día actual -->
     <div class="day-indicator" id="dayIndicator"></div>
+    
+    <!-- Indicador discreto de colaboración -->
+    <div class="collaboration-indicator" id="collaborationIndicator" style="display: none;">
+        <i class="fas fa-users"></i>
+        <span id="collaborationCount">1</span>
+    </div>
 
     <div class="platform-container">
         <header>
@@ -1616,38 +1651,46 @@
                 Compartir Plataforma
             </div>
             
-            <div class="share-input-group">
-                <div class="share-input-label">ID de Sesión</div>
-                <input type="text" class="share-input" id="sessionIdInput" readonly>
-                <div class="share-buttons">
-                    <button class="primary" id="copySessionId">
+            <div class="share-options">
+                <div class="share-option whatsapp" id="shareWhatsApp">
+                    <div class="share-icon">
+                        <i class="fab fa-whatsapp"></i>
+                    </div>
+                    <div class="share-option-text">
+                        <div class="share-option-title">WhatsApp</div>
+                        <div class="share-option-description">Compartir plataforma por WhatsApp</div>
+                    </div>
+                </div>
+                
+                <div class="share-option telegram" id="shareTelegram">
+                    <div class="share-icon">
+                        <i class="fab fa-telegram"></i>
+                    </div>
+                    <div class="share-option-text">
+                        <div class="share-option-title">Telegram</div>
+                        <div class="share-option-description">Compartir plataforma por Telegram</div>
+                    </div>
+                </div>
+                
+                <div class="share-option email" id="shareEmail">
+                    <div class="share-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="share-option-text">
+                        <div class="share-option-title">Correo Electrónico</div>
+                        <div class="share-option-description">Enviar plataforma por email</div>
+                    </div>
+                </div>
+                
+                <div class="share-option copy" id="shareCopy">
+                    <div class="share-icon">
                         <i class="fas fa-copy"></i>
-                        Copiar ID
-                    </button>
-                    <button class="success" id="createSession">
-                        <i class="fas fa-plus"></i>
-                        Nueva Sesión
-                    </button>
+                    </div>
+                    <div class="share-option-text">
+                        <div class="share-option-title">Copiar Enlace</div>
+                        <div class="share-option-description">Copiar enlace al portapapeles</div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="share-input-group">
-                <div class="share-input-label">Unirse a Sesión</div>
-                <input type="text" class="share-input" id="joinSessionInput" placeholder="Pega el ID de sesión aquí">
-                <div class="share-buttons">
-                    <button class="primary" id="joinSession">
-                        <i class="fas fa-sign-in-alt"></i>
-                        Unirse
-                    </button>
-                    <button class="danger" id="leaveSession">
-                        <i class="fas fa-sign-out-alt"></i>
-                        Salir
-                    </button>
-                </div>
-            </div>
-            
-            <div class="share-status" id="shareStatus">
-                No conectado a ninguna sesión
             </div>
             
             <div class="share-buttons">
@@ -1690,6 +1733,211 @@
     </div>
 
     <script>
+        // Sistema de Colaboración en Tiempo Real
+        function initializeCollaborationSystem() {
+            // Generar ID de sala único si no existe
+            let roomId = getRoomId();
+            if (!roomId) {
+                roomId = generateRoomId();
+                setRoomId(roomId);
+            }
+            
+            // Generar ID de usuario único
+            let userId = getUserId();
+            if (!userId) {
+                userId = generateUserId();
+                setUserId(userId);
+            }
+            
+            // Elementos del indicador de colaboración
+            const collaborationIndicator = document.getElementById('collaborationIndicator');
+            const collaborationCount = document.getElementById('collaborationCount');
+            
+            // Sistema de sincronización en tiempo real
+            let collaborationData = {
+                users: {},
+                trading: {},
+                plan21: {}
+            };
+            
+            // Cargar datos de colaboración
+            function loadCollaborationData() {
+                const saved = localStorage.getItem(`collaboration_${roomId}`);
+                if (saved) {
+                    try {
+                        collaborationData = JSON.parse(saved);
+                    } catch (e) {
+                        console.error('Error cargando datos de colaboración:', e);
+                    }
+                }
+                
+                // Agregar/actualizar usuario actual
+                collaborationData.users[userId] = {
+                    id: userId,
+                    lastActive: Date.now()
+                };
+                
+                saveCollaborationData();
+                updateCollaborationIndicator();
+            }
+            
+            // Guardar datos de colaboración
+            function saveCollaborationData() {
+                localStorage.setItem(`collaboration_${roomId}`, JSON.stringify(collaborationData));
+                
+                // Disparar evento personalizado para notificar a otras pestañas
+                window.dispatchEvent(new CustomEvent('collaborationUpdate', {
+                    detail: { roomId, userId }
+                }));
+            }
+            
+            // Actualizar indicador de colaboración
+            function updateCollaborationIndicator() {
+                // Limpiar usuarios inactivos (más de 5 minutos)
+                const now = Date.now();
+                Object.keys(collaborationData.users).forEach(id => {
+                    if (now - collaborationData.users[id].lastActive > 300000) { // 5 minutos
+                        delete collaborationData.users[id];
+                    }
+                });
+                
+                // Actualizar contador
+                const userCount = Object.keys(collaborationData.users).length;
+                collaborationCount.textContent = userCount;
+                
+                // Mostrar/ocultar indicador
+                if (userCount > 1) {
+                    collaborationIndicator.style.display = 'flex';
+                } else {
+                    collaborationIndicator.style.display = 'none';
+                }
+                
+                saveCollaborationData();
+            }
+            
+            // Sincronizar datos de trading
+            function syncTradingData(data) {
+                collaborationData.trading = data;
+                saveCollaborationData();
+            }
+            
+            // Sincronizar datos del plan de 21 días
+            function syncPlan21Data(data) {
+                collaborationData.plan21 = data;
+                saveCollaborationData();
+            }
+            
+            // Escuchar eventos de colaboración de otras pestañas
+            window.addEventListener('collaborationUpdate', function(e) {
+                if (e.detail.roomId === roomId && e.detail.userId !== userId) {
+                    loadCollaborationData();
+                    
+                    // Si hay datos de trading, sincronizarlos
+                    if (collaborationData.trading && Object.keys(collaborationData.trading).length > 0) {
+                        // Actualizar datos de trading
+                        if (collaborationData.trading.saldo !== undefined) {
+                            document.getElementById('saldo').value = collaborationData.trading.saldo;
+                        }
+                        if (collaborationData.trading.metaG !== undefined) {
+                            document.getElementById('metaG').value = collaborationData.trading.metaG;
+                        }
+                        if (collaborationData.trading.metaP !== undefined) {
+                            document.getElementById('metaP').value = collaborationData.trading.metaP;
+                        }
+                        
+                        // Recalcular
+                        if (window.recalculate) {
+                            window.recalculate();
+                        }
+                    }
+                    
+                    // Si hay datos del plan de 21 días, sincronizarlos
+                    if (collaborationData.plan21 && Object.keys(collaborationData.plan21).length > 0) {
+                        if (collaborationData.plan21.initialCapital !== undefined) {
+                            document.getElementById('initialCapital').value = collaborationData.plan21.initialCapital;
+                        }
+                        if (collaborationData.plan21.dailyPercentage !== undefined) {
+                            document.getElementById('dailyPercentage').value = collaborationData.plan21.dailyPercentage;
+                        }
+                        
+                        // Recalcular
+                        if (window.calculateGrowth) {
+                            window.calculateGrowth();
+                        }
+                    }
+                }
+            });
+            
+            // Actualizar actividad del usuario cada minuto
+            setInterval(() => {
+                collaborationData.users[userId].lastActive = Date.now();
+                saveCollaborationData();
+            }, 60000);
+            
+            // Inicializar
+            loadCollaborationData();
+            
+            // Exponer funciones para sincronización
+            window.syncTradingData = syncTradingData;
+            window.syncPlan21Data = syncPlan21Data;
+            
+            return {
+                syncTradingData,
+                syncPlan21Data
+            };
+        }
+        
+        // Funciones auxiliares para la colaboración
+        function getRoomId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('room');
+        }
+        
+        function setRoomId(roomId) {
+            const url = new URL(window.location);
+            url.searchParams.set('room', roomId);
+            window.history.replaceState({}, '', url);
+        }
+        
+        function generateRoomId() {
+            return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        }
+        
+        function getUserId() {
+            return localStorage.getItem('collaboration_userId');
+        }
+        
+        function setUserId(userId) {
+            localStorage.setItem('collaboration_userId', userId);
+        }
+        
+        function generateUserId() {
+            return 'user_' + Math.random().toString(36).substring(2, 9);
+        }
+        
+        // Función para aplicar color según el día de la semana
+        function applyDayColor() {
+            const daysOfWeek = [
+                { name: 'Domingo', color: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)' },
+                { name: 'Lunes', color: 'linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)' },
+                { name: 'Martes', color: 'linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b)' },
+                { name: 'Miércoles', color: 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)' },
+                { name: 'Jueves', color: 'linear-gradient(135deg, #1e3c72, #2a5298, #1e3c72)' },
+                { name: 'Viernes', color: 'linear-gradient(135deg, #4b6cb7, #182848)' },
+                { name: 'Sábado', color: 'linear-gradient(135deg, #200122, #6f0000)' }
+            ];
+            
+            const today = new Date().getDay();
+            const body = document.body;
+            const dayIndicator = document.getElementById('dayIndicator');
+            
+            // Aplicar el gradiente del día actual
+            body.style.background = daysOfWeek[today].color;
+            
+            // Actualizar el indicador del día
+            dayIndicator.textContent = `Hoy: ${daysOfWeek[today].name}`;
+        }
+
         // Navegación entre secciones
         document.addEventListener('DOMContentLoaded', function() {
             // Aplicar color según el día de la semana
@@ -1717,6 +1965,7 @@
             });
             
             // Inicializar todas las secciones
+            initializeCollaborationSystem();
             initializeTradingSection();
             initializeTradingCalculator();
             initializeRiskCalculator();
@@ -1726,29 +1975,6 @@
             initializeMedicationReminders();
             initializeSharingSystem();
         });
-
-        // Función para aplicar color según el día de la semana
-        function applyDayColor() {
-            const daysOfWeek = [
-                { name: 'Domingo', color: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)' },
-                { name: 'Lunes', color: 'linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d)' },
-                { name: 'Martes', color: 'linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b)' },
-                { name: 'Miércoles', color: 'linear-gradient(135deg, #0f2027, #203a43, #2c5364)' },
-                { name: 'Jueves', color: 'linear-gradient(135deg, #1e3c72, #2a5298, #1e3c72)' },
-                { name: 'Viernes', color: 'linear-gradient(135deg, #4b6cb7, #182848)' },
-                { name: 'Sábado', color: 'linear-gradient(135deg, #200122, #6f0000)' }
-            ];
-            
-            const today = new Date().getDay();
-            const body = document.body;
-            const dayIndicator = document.getElementById('dayIndicator');
-            
-            // Aplicar el gradiente del día actual
-            body.style.background = daysOfWeek[today].color;
-            
-            // Actualizar el indicador del día
-            dayIndicator.textContent = `Hoy: ${daysOfWeek[today].name}`;
-        }
 
         // Sistema de Recordatorios de Medicamentos
         function initializeMedicationReminders() {
@@ -1884,28 +2110,19 @@
             }
         }
 
-        // Sistema de Compartición en Tiempo Real
+        // Sistema de Compartición - MODIFICADO para compartir la plataforma completa
         function initializeSharingSystem() {
             const shareBtn = document.getElementById('shareBtn');
             const shareModal = document.getElementById('shareModal');
-            const sessionIdInput = document.getElementById('sessionIdInput');
-            const copySessionIdBtn = document.getElementById('copySessionId');
-            const createSessionBtn = document.getElementById('createSession');
-            const joinSessionInput = document.getElementById('joinSessionInput');
-            const joinSessionBtn = document.getElementById('joinSession');
-            const leaveSessionBtn = document.getElementById('leaveSession');
-            const shareStatus = document.getElementById('shareStatus');
             const closeShareModal = document.getElementById('closeShareModal');
-            
-            let currentSessionId = null;
-            let isHost = false;
-            let peer = null;
-            let conn = null;
+            const shareWhatsApp = document.getElementById('shareWhatsApp');
+            const shareTelegram = document.getElementById('shareTelegram');
+            const shareEmail = document.getElementById('shareEmail');
+            const shareCopy = document.getElementById('shareCopy');
             
             // Abrir modal al hacer clic en el botón de compartir
             shareBtn.addEventListener('click', function() {
                 shareModal.classList.add('show');
-                updateShareStatus();
             });
             
             // Cerrar modal
@@ -1913,146 +2130,61 @@
                 shareModal.classList.remove('show');
             });
             
-            // Crear nueva sesión
-            createSessionBtn.addEventListener('click', function() {
-                createNewSession();
+            // Compartir por WhatsApp
+            shareWhatsApp.addEventListener('click', function() {
+                const message = generateSharingMessage();
+                const text = encodeURIComponent(message);
+                window.open(`https://wa.me/?text=${text}`, '_blank');
+                shareModal.classList.remove('show');
+                showNotification('Compartiendo plataforma por WhatsApp...');
             });
             
-            // Unirse a sesión existente
-            joinSessionBtn.addEventListener('click', function() {
-                const sessionId = joinSessionInput.value.trim();
-                if (sessionId) {
-                    joinSession(sessionId);
-                } else {
-                    showNotification('Por favor, ingresa un ID de sesión válido');
-                }
+            // Compartir por Telegram
+            shareTelegram.addEventListener('click', function() {
+                const message = generateSharingMessage();
+                const text = encodeURIComponent(message);
+                window.open(`https://t.me/share/url?url=${encodeURIComponent(window.location.href)}&text=${text}`, '_blank');
+                shareModal.classList.remove('show');
+                showNotification('Compartiendo plataforma por Telegram...');
             });
             
-            // Salir de la sesión actual
-            leaveSessionBtn.addEventListener('click', function() {
-                leaveSession();
+            // Compartir por Email
+            shareEmail.addEventListener('click', function() {
+                const message = generateSharingMessage();
+                const subject = encodeURIComponent('Plataforma de Trading Completa');
+                const body = encodeURIComponent(message);
+                window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+                shareModal.classList.remove('show');
+                showNotification('Abriendo cliente de correo...');
             });
             
-            // Copiar ID de sesión al portapapeles
-            copySessionIdBtn.addEventListener('click', function() {
-                if (sessionIdInput.value) {
-                    sessionIdInput.select();
-                    document.execCommand('copy');
-                    showNotification('ID de sesión copiado al portapapeles');
-                }
+            // Copiar al portapapeles
+            shareCopy.addEventListener('click', function() {
+                const message = generateSharingMessage();
+                navigator.clipboard.writeText(message).then(function() {
+                    showNotification('Enlace de plataforma copiado al portapapeles');
+                    shareModal.classList.remove('show');
+                }, function() {
+                    showNotification('Error al copiar al portapapeles');
+                });
             });
             
-            // Crear nueva sesión
-            function createNewSession() {
-                // Generar ID único para la sesión
-                currentSessionId = generateSessionId();
-                isHost = true;
+            // Generar mensaje de invitación a la plataforma
+            function generateSharingMessage() {
+                const roomId = getRoomId();
+                const platformUrl = window.location.href;
                 
-                // Actualizar interfaz
-                sessionIdInput.value = currentSessionId;
-                updateShareStatus();
+                let message = `🚀 ¡Te invito a usar la Plataforma de Trading Completa! 🚀\n\n`;
+                message += `Una herramienta completa para gestionar tu trading con:\n\n`;
+                message += `• Bitácora de trading profesional\n`;
+                message += `• Calculadoras de lotaje y gestión de riesgo\n`;
+                message += `• Plan de 21 días con interés compuesto\n`;
+                message += `• Recordatorios de salud y bienestar\n`;
+                message += `• Música de fondo para concentración\n\n`;
+                message += `🔗 Accede aquí: ${platformUrl}\n\n`;
+                message += `¡Únete y mejora tu estrategia de trading! 📈`;
                 
-                // Inicializar conexión PeerJS como host
-                initializePeerConnection(true);
-                
-                showNotification('Sesión creada. Comparte el ID con otros usuarios.');
-            }
-            
-            // Unirse a sesión existente
-            function joinSession(sessionId) {
-                currentSessionId = sessionId;
-                isHost = false;
-                
-                // Actualizar interfaz
-                sessionIdInput.value = sessionId;
-                updateShareStatus();
-                
-                // Inicializar conexión PeerJS como cliente
-                initializePeerConnection(false);
-                
-                showNotification('Uniéndose a la sesión...');
-            }
-            
-            // Salir de la sesión actual
-            function leaveSession() {
-                if (peer) {
-                    peer.destroy();
-                    peer = null;
-                }
-                
-                if (conn) {
-                    conn.close();
-                    conn = null;
-                }
-                
-                currentSessionId = null;
-                isHost = false;
-                
-                // Actualizar interfaz
-                sessionIdInput.value = '';
-                joinSessionInput.value = '';
-                updateShareStatus();
-                
-                showNotification('Sesión cerrada');
-            }
-            
-            // Actualizar estado de la conexión en la interfaz
-            function updateShareStatus() {
-                if (!currentSessionId) {
-                    shareStatus.textContent = 'No conectado a ninguna sesión';
-                    shareStatus.className = 'share-status';
-                    shareBtn.classList.remove('active');
-                } else if (isHost) {
-                    shareStatus.textContent = 'Activo como anfitrión - Sesión: ' + currentSessionId;
-                    shareStatus.className = 'share-status connected';
-                    shareBtn.classList.add('active');
-                } else {
-                    shareStatus.textContent = 'Conectado como invitado - Sesión: ' + currentSessionId;
-                    shareStatus.className = 'share-status connected';
-                    shareBtn.classList.add('active');
-                }
-            }
-            
-            // Inicializar conexión PeerJS
-            function initializePeerConnection(host) {
-                // Para una implementación real, necesitarías incluir la biblioteca PeerJS
-                // y configurar un servidor de señalización
-                
-                // Esta es una simulación del funcionamiento
-                if (host) {
-                    showNotification('Esperando conexiones... Comparte el ID: ' + currentSessionId);
-                    
-                    // Simular conexión exitosa después de 2 segundos
-                    setTimeout(() => {
-                        showNotification('Sesión lista para compartir datos');
-                    }, 2000);
-                } else {
-                    showNotification('Conectando a la sesión...');
-                    
-                    // Simular conexión exitosa después de 2 segundos
-                    setTimeout(() => {
-                        showNotification('Conectado a la sesión. Sincronizando datos...');
-                        // En una implementación real, aquí se solicitarían los datos actuales
-                    }, 2000);
-                }
-                
-                // En una implementación real, aquí iría el código para:
-                // 1. Inicializar PeerJS
-                // 2. Establecer conexiones
-                // 3. Sincronizar datos entre clientes
-                // 4. Manejar eventos de conexión/desconexión
-            }
-            
-            // Generar ID de sesión único
-            function generateSessionId() {
-                return Math.random().toString(36).substring(2, 8).toUpperCase();
-            }
-            
-            // Sincronizar datos (simulación)
-            function syncData(data) {
-                // En una implementación real, esta función enviaría los datos
-                // a través de la conexión PeerJS a todos los clientes conectados
-                console.log('Sincronizando datos:', data);
+                return message;
             }
             
             // Mostrar notificación
@@ -2066,31 +2198,6 @@
                 setTimeout(() => {
                     notification.classList.remove('show');
                 }, 3000);
-            }
-            
-            // Modificar la función saveData existente para incluir sincronización
-            const originalSaveData = window.saveData;
-            if (originalSaveData) {
-                window.saveData = function() {
-                    originalSaveData.apply(this, arguments);
-                    
-                    // Si estamos en una sesión compartida, sincronizar datos
-                    if (currentSessionId) {
-                        const data = {
-                            fecha: document.getElementById('fecha').value,
-                            saldo: document.getElementById('saldo').value,
-                            metaG: document.getElementById('metaG').value,
-                            metaP: document.getElementById('metaP').value,
-                            operaciones: Array.from(document.querySelectorAll('#body tr')).map(row => ({
-                                activo: row.querySelector('[data-field="activo"]').value,
-                                resultado: row.querySelector('[data-field="resultado"]').value,
-                                notas: row.querySelector('[data-field="notas"]').value
-                            }))
-                        };
-                        
-                        syncData(data);
-                    }
-                };
             }
         }
 
@@ -2290,8 +2397,10 @@
             }
         }
 
-        // Código para la Bitácora de Trading
+        // Código para la Bitácora de Trading - MODIFICADO para sincronización
         function initializeTradingSection() {
+            const collaboration = window.collaborationSystem;
+            
             const LS_KEY = 'bitacora_trading_profesional_v3';
 
             // Elementos DOM
@@ -2456,6 +2565,16 @@
                     }))
                 };
                 localStorage.setItem(LS_KEY, JSON.stringify(data));
+                
+                // Sincronizar con otros usuarios
+                if (collaboration && collaboration.syncTradingData) {
+                    collaboration.syncTradingData({
+                        fecha: fecha.value,
+                        saldo: saldo.value,
+                        metaG: metaG.value,
+                        metaP: metaP.value
+                    });
+                }
             }
 
             // Cargar datos desde localStorage
@@ -2570,6 +2689,16 @@
                     setToday();
                     initializeRows(5);
                     recalculate();
+                    
+                    // Sincronizar limpieza
+                    if (collaboration && collaboration.syncTradingData) {
+                        collaboration.syncTradingData({
+                            fecha: fecha.value,
+                            saldo: '',
+                            metaG: '',
+                            metaP: ''
+                        });
+                    }
                 }
             });
 
@@ -2586,6 +2715,9 @@
             // Inicializar
             loadData();
             recalculate();
+            
+            // Exponer recalculate para sincronización
+            window.recalculate = recalculate;
         }
 
         // Código para la Calculadora de Lotaje
@@ -2662,8 +2794,10 @@
             calcularRiesgo();
         }
 
-        // Código para el Plan de 21 Días
+        // Código para el Plan de 21 Días - MODIFICADO para sincronización
         function initializePlan21Section() {
+            const collaboration = window.collaborationSystem;
+            
             const daysContainer = document.getElementById('daysContainer');
             const calculateBtn = document.getElementById('calculateBtn');
             const initialCapitalInput = document.getElementById('initialCapital');
@@ -2682,6 +2816,24 @@
             // Actualizar display del capital inicial
             initialCapitalInput.addEventListener('input', function() {
                 initialCapitalDisplay.textContent = `$${parseFloat(this.value).toFixed(2)}`;
+                
+                // Sincronizar cambios
+                if (collaboration && collaboration.syncPlan21Data) {
+                    collaboration.syncPlan21Data({
+                        initialCapital: this.value,
+                        dailyPercentage: dailyPercentageInput.value
+                    });
+                }
+            });
+            
+            dailyPercentageInput.addEventListener('input', function() {
+                // Sincronizar cambios
+                if (collaboration && collaboration.syncPlan21Data) {
+                    collaboration.syncPlan21Data({
+                        initialCapital: initialCapitalInput.value,
+                        dailyPercentage: this.value
+                    });
+                }
             });
             
             // Función para calcular el crecimiento
@@ -2771,9 +2923,23 @@
             // Event listeners
             calculateBtn.addEventListener('click', calculateGrowth);
             
+            // Sincronizar datos al cargar
+            if (collaboration && collaboration.syncPlan21Data) {
+                collaboration.syncPlan21Data({
+                    initialCapital: initialCapitalInput.value,
+                    dailyPercentage: dailyPercentageInput.value
+                });
+            }
+            
             // Calcular automáticamente al cargar la página
             calculateGrowth();
+            
+            // Exponer calculateGrowth para sincronización
+            window.calculateGrowth = calculateGrowth;
         }
+        
+        // Inicializar sistema de colaboración global
+        window.collaborationSystem = initializeCollaborationSystem();
     </script>
 </body>
 </html>
